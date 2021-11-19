@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Router from 'svelte-spa-router';
-	import Nav from './components/Nav.svelte'
-	import routes from './routes';
+	import Router from "svelte-spa-router";
+	import Nav from "./components/Nav.svelte";
+	import routes from "./routes";
 </script>
 
 <Nav />
