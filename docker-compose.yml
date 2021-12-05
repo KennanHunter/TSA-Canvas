@@ -7,12 +7,10 @@ services:
             - 8000:8000
         depends_on:
             - db
-        # networks:
-        #     - backend
     db:
         image: postgres:14.1
         volumes:
-            - db-data:/var/lib/postgresql/data
+            - ./postgresdata:/var/lib/postgresql/data
         ports:
             - 5432:5432
         environment:
@@ -33,6 +31,3 @@ services:
             - api
 volumes:
     db-data:
-# networks:
-#     frontend:
-#     backend:
