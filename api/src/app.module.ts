@@ -5,12 +5,12 @@ import { UsersModule } from "./users/users.module";
 @Module({
 	imports: [
 		TypeOrmModule.forRoot({
-			type: "mysql",
-			host: "localhost",
-			port: 3306,
-			username: "root",
-			password: "root",
-			database: "test",
+			type: "postgres",
+			host: "tsa-canvas-db-1",
+			port: 5432,
+			username: "postgres",
+			password: "password",
+			database: "tsa-canvas-db",
 			autoLoadEntities: true,
 			synchronize: true,
 		}),
