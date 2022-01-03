@@ -11,3 +11,7 @@ Features:
 - Authentification
 - Student View
 - Database Schema Completed
+ 
+ 
+ ### Release
+ March 1st
