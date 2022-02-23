@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ColorScheme {
+  DARK
+  LIGHT
+}
+
+model User {
+  id       String   @id @default(cuid())
+  name     String
+  pronouns String?
+  email    String   @unique
+  password String?
+  isGuest  Boolean
+  joinedAt DateTime @default(now())
+  avatar   String
+
+  UserPreferences UserPreferences?
+
+  ownedClasses Class[] @relation(name: "Owner")
+
+  taughtClasses                Class[]                        @relation(name: "taughtClasses")
+  memberClasses                Class[]                        @relation(name: "memberClasses")
+  AssignmentSubmissions        AssignmentSubmission[]
+  AssignmentComments           AssignmentComments[]
+  AssignmentSubmissionComments AssignmentSubmissionComments[]
+}
+
+model UserPreferences {
+  id                 Int         @id @default(autoincrement())
+  theme              ColorScheme @default(LIGHT)
+  notifyByEmail      Boolean     @default(true)
+  assignmentColoring Boolean     @default(true)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
+model Class {
+  id    String @id @default(cuid())
+  name  String
+  color String // Hex color
+
+  owner   User   @relation(name: "Owner", fields: [ownerId], references: [id])
+  ownerId String
+
+  teachers User[] @relation(name: "taughtClasses")
+  members  User[] @relation(name: "memberClasses")
+}
+
+model Assignment {
+  id                   String                 @id @default(cuid())
+  name                 String
+  description          String
+  color                String
+  createdAt            DateTime               @default(now())
+  dueAt                DateTime?
+  maxGrade             Int?
+  assignmentSubmission AssignmentSubmission[]
+  assignmentComments   AssignmentComments[]
+}
+
+model AssignmentSubmission {
+  assignment         Assignment                     @relation(fields: [assignmentId], references: [id])
+  member             User                           @relation(fields: [userId], references: [id])
+  assignmentId       String
+  userId             String
+  grade              Int? // out of Assignment.maxGrade
+  submitted          Boolean
+  submittedAt        DateTime?
+  AssignmentComments AssignmentSubmissionComments[]
+
+  @@id([assignmentId, userId])
+}
+
+model AssignmentSubmissionComments {
+  id                   String               @id @default(cuid())
+  createdAt            DateTime             @default(now())
+  assignmentSubmission AssignmentSubmission @relation(fields: [RelationAssignmentId, RelationUserId], references: [assignmentId, userId])
+  RelationAssignmentId String
+  RelationUserId       String
+  user                 User                 @relation(fields: [userId], references: [id])
+  userId               String
+
+  text String
+}
+
+model AssignmentComments {
+  id                   String     @id @default(cuid())
+  createdAt            DateTime   @default(now())
+  assignment           Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId         String
+  RelationAssignmentId String
+  RelationUserId       String
+  user                 User       @relation(fields: [userId], references: [id])
+  userId               String
+
+  text String
+}
