@@ -7,7 +7,10 @@
 	"private": true,
 	"scripts": {
 		"start": "ts-node src/index.ts",
-		"migrate:start": "prisma migrate deploy && yarn start",
+		"migrate": "prisma migrate deploy",
+		"generate": "prisma generate && ts-node --transpile-only src/schema.ts",
+		"deploy": "yarn generate && yarn migrate && yarn start",
+		"deploy:npm": "npm run generate && npm run migrate && npm run start",
 		"dev": "ts-node-dev --transpile-only --no-notify --exit-child src/index.ts"
 	},
 	"devDependencies": {

@@ -4,4 +4,4 @@ WORKDIR /api
 COPY *.json *.lock ./
 RUN yarn install
 COPY . .
-CMD [ "yarn", "migrate:start" ]
+CMD [ "yarn", "deploy" ]
