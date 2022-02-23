@@ -7,6 +7,10 @@ services:
             - 8000:8000
         depends_on:
             - db
+        environment:
+            - DATABASE_URL=postgresql://postgres:password@tsa-canvas-db-1:5432/tsa-canvas-db
+            - PORT=8000
+            - APP_SECRET=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTQ2Nzc3MzQ5Nn0.v0Gfc9fKDQfkDningjmObkD5-EcbfWy5vuvuOimTV032iCoOaaQtCsZxQC78JbLbeQNLUA3UaQnuLgvwwqLmIg
     db:
         image: postgres:14.1
         volumes:
