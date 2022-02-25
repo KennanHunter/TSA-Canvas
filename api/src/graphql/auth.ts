@@ -22,5 +22,5 @@ export function decodeAuthHeader(authHeader: String): AuthTokenPayload {
 	if (!token) {
 		throw new Error("No token found");
 	}
-	return jwt.verify(token, process.env.JWT_SECRET) as AuthTokenPayload;
+	return jwt.verify(token, process.env.APP_SECRET) as AuthTokenPayload;
 }

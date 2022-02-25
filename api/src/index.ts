@@ -1,8 +1,6 @@
 import { ApolloServer } from "apollo-server";
 import { context } from "./context";
 
-require("dotenv").config();
-
 import { schema } from "./schema";
 // import { populate } from "./data/populate";
 

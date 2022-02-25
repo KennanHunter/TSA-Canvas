@@ -51,6 +51,18 @@ export const Class = objectType({
 	},
 });
 
+export const ClassFeed = extendType({
+	type: "Query",
+	definition(t) {
+		t.nonNull.list.nonNull.field("classFeed", {
+			type: Class,
+			resolve(parent, args, context) {
+				return context.prisma.class.findMany();
+			},
+		});
+	},
+});
+
 export const ClassMutation = extendType({
 	type: "Mutation",
 	definition(t) {
