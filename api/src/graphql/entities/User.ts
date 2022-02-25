@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { AuthTokenPayload } from "../auth";
 import { AuthenticationError } from "apollo-server";
-import { prisma, User as Userobject } from "@prisma/client";
+import { User as Userobject } from "@prisma/client";
 
 export const User = objectType({
 	name: "User",
@@ -61,6 +61,7 @@ export const UserMutation = extendType({
 				password: nonNull(stringArg()),
 			},
 			async resolve(parent, args, context: Context) {
+				const password = await bcrypt.hash(args.password, 10);
 
 				const user = await context.prisma.user.findUnique({
 					where: {
@@ -113,30 +114,15 @@ export const UserMutation = extendType({
 					updatedData.avatar = args.avatar;
 				}
 
-				const user = context.prisma.user.update({
+				const user = await context.prisma.user.update({
 					where: {
 						id: context.userId,
 					},
 					data: updatedData,
 				});
 
-				return user as Promise<Userobject>;
+				return user as Userobject;
 			},
 		});
-		/**
-		 * Deleting is impossible without having to deal with relations
-		 */
-		// t.nonNull.field("delete", {
-		// 	type: "User",
-		// 	resolve(parent, args, context: Context) {
-		// 		const deletedUser = context.prisma.user.delete({
-		// 			where: {
-		// 				id: context.userId,
-		// 			},
-		// 		});
-
-		// 		return deletedUser;
-		// 	},
-		// });
 	},
 });
