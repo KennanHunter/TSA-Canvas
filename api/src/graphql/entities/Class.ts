@@ -86,7 +86,7 @@ export const ClassMutation = extendType({
 				return newClass;
 			},
 		});
-		t.nonNull.field("addUser", {
+		t.nonNull.field("addMember", {
 			type: Class,
 			args: {
 				classId: nonNull(stringArg()),
@@ -125,7 +125,97 @@ export const ClassMutation = extendType({
 				return newClass;
 			},
 		});
+
+		/**
+		 * Adds Teacher
+		 */
 		t.nonNull.field("addTeacher", {
+			type: Class,
+			args: {
+				classId: nonNull(stringArg()),
+				teacherId: nonNull(stringArg()),
+			},
+			async resolve(parent, args, context: Context) {
+				const { classId, teacherId } = args;
+
+				if (
+					(
+						await context.prisma.class
+							.findUnique({
+								where: {
+									id: classId,
+								},
+							})
+							.owner()
+					).id !== context.userId
+				) {
+					throw new AuthenticationError("User does not own class");
+				}
+
+				const newClass = context.prisma.class.update({
+					where: {
+						id: classId,
+					},
+					data: {
+						members: {
+							connect: {
+								id: teacherId,
+							},
+						},
+					},
+				});
+
+				return newClass;
+			},
+		});
+
+		/**
+		 * Removes student from class
+		 */
+		t.nonNull.field("removeMember", {
+			type: Class,
+			args: {
+				classId: nonNull(stringArg()),
+				studentId: nonNull(stringArg()),
+			},
+			async resolve(parent, args, context: Context) {
+				const { classId, studentId } = args;
+
+				if (
+					(
+						await context.prisma.class
+							.findUnique({
+								where: {
+									id: classId,
+								},
+							})
+							.owner()
+					).id !== context.userId
+				) {
+					throw new AuthenticationError("User does not own class");
+				}
+
+				const newClass = context.prisma.class.update({
+					where: {
+						id: classId,
+					},
+					data: {
+						members: {
+							disconnect: {
+								id: studentId,
+							},
+						},
+					},
+				});
+
+				return newClass;
+			},
+		});
+
+		/**
+		 * Removes teacher from class
+		 */
+		t.nonNull.field("removeTeacher", {
 			type: Class,
 			args: {
 				classId: nonNull(stringArg()),
