@@ -1,11 +1,5 @@
-import { AuthenticationError, UserInputError } from "apollo-server";
-import {
-	extendType,
-	nonNull,
-	objectType,
-	queryComplexityPlugin,
-	stringArg,
-} from "nexus";
+import { AuthenticationError } from "apollo-server";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 
 export const Class = objectType({
@@ -52,48 +46,6 @@ export const Class = objectType({
 						where: { id: parent.id },
 					})
 					.owner();
-			},
-		});
-	},
-});
-
-export const ClassQuery = extendType({
-	type: "Query",
-	definition(t) {
-		t.nonNull.field("Class", {
-			type: Class,
-			args: {
-				classId: nonNull(stringArg()),
-			},
-			async resolve(parent, args, context: Context) {
-				const query = await context.prisma.class.findUnique({
-					where: {
-						id: args.classId,
-					},
-					include: {
-						members: true,
-						owner: true,
-						teachers: true,
-					},
-				});
-
-				if (query.owner.id === context.userId) {
-					return query;
-				}
-
-				query.members.forEach((user) => {
-					if (user.id === context.userId) {
-						return query;
-					}
-				});
-
-				query.teachers.forEach((user) => {
-					if (user.id === context.userId) {
-						return query;
-					}
-				});
-
-				throw new AuthenticationError("Must be part of class to query");
 			},
 		});
 	},
