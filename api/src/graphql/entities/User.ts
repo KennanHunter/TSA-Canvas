@@ -3,8 +3,6 @@ import { Context } from "../../context";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { AuthTokenPayload } from "../auth";
-import { AuthenticationError } from "apollo-server";
-import { User as Userobject } from "@prisma/client";
 
 export const User = objectType({
 	name: "User",
@@ -20,7 +18,7 @@ export const User = objectType({
 export const UserMutation = extendType({
 	type: "Mutation",
 	definition(t) {
-		t.nonNull.field("signup", {
+		t.nonNull.field("Signup", {
 			type: "AuthPayload",
 			args: {
 				email: nonNull(stringArg()),
@@ -48,80 +46,12 @@ export const UserMutation = extendType({
 				};
 				const token = jwt.sign(payload, process.env.APP_SECRET);
 
-				return {
-					user,
-					token,
-				};
-			},
-		});
-		t.nonNull.field("login", {
-			type: "AuthPayload",
-			args: {
-				email: nonNull(stringArg()),
-				password: nonNull(stringArg()),
-			},
-			async resolve(parent, args, context: Context) {
-				const password = await bcrypt.hash(args.password, 10);
-
-				const user = await context.prisma.user.findUnique({
-					where: {
-						email: args.email,
-					},
-				});
-
-				const valid = await bcrypt.compare(
-					args.password,
-					user.password,
-				);
-
-				if (!user || !valid) {
-					throw new Error("Invalid Username or Password");
-				}
-
-				const payload: AuthTokenPayload = {
-					userId: user.id,
-					isGuest: user.isGuest,
-				};
-
-				const token = jwt.sign(payload, process.env.APP_SECRET);
+				console.log(context.userId);
 
 				return {
 					user,
 					token,
 				};
-			},
-		});
-
-		t.nonNull.field("update", {
-			type: "User",
-			args: {
-				pronouns: stringArg(),
-				avatar: stringArg(),
-			},
-			async resolve(parent, args, context: Context): Promise<Userobject> {
-				if (!context.userId) {
-					throw new AuthenticationError(
-						"Must be signed in to update user",
-					);
-				}
-
-				let updatedData: any = {};
-
-				if (args.pronouns) {
-					updatedData.pronouns = args.pronouns;
-				}
-				if (args.avatar) {
-					updatedData.avatar = args.avatar;
-				}
-
-				const user = await context.prisma.user.update({
-					where: {
-						id: context.userId,
-					},
-					data: updatedData,
-				});
-
-				return user as Userobject;
 			},
 		});
 	},
