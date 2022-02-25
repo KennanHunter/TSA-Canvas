@@ -8,6 +8,6 @@ const server = new ApolloServer({
 	context,
 });
 
-server.listen(process.env.PORT || 4000).then(({ url }) => {
-	console.log(`Server online at ${url}`);
+server.listen().then(({ url }) => {
+	console.log("Server online");
 });
