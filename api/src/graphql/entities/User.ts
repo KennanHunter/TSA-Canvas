@@ -46,7 +46,7 @@ export const UserMutation = extendType({
 					userId: user.id,
 					isGuest: user.isGuest,
 				};
-				const token = jwt.sign(payload, process.env.APP_SECRET);
+				const token = jwt.sign(payload, process.env.JWT_SECRET);
 
 				return {
 					user,
@@ -61,7 +61,6 @@ export const UserMutation = extendType({
 				password: nonNull(stringArg()),
 			},
 			async resolve(parent, args, context: Context) {
-
 				const user = await context.prisma.user.findUnique({
 					where: {
 						email: args.email,
@@ -82,7 +81,7 @@ export const UserMutation = extendType({
 					isGuest: user.isGuest,
 				};
 
-				const token = jwt.sign(payload, process.env.APP_SECRET);
+				const token = jwt.sign(payload, process.env.JWT_SECRET);
 
 				return {
 					user,
@@ -138,5 +137,29 @@ export const UserMutation = extendType({
 		// 		return deletedUser;
 		// 	},
 		// });
+	},
+});
+
+export const selfQuery = extendType({
+	type: "Query",
+	definition(t) {
+		t.nonNull.field("self", {
+			type: "User",
+			resolve(parent, args, context: Context) {
+				if (!context.userId) {
+					throw new AuthenticationError("Cannot do query while not logged in")
+				}
+				return context.prisma.user.findUnique({
+					where: {
+						id: context.userId,
+					},
+					include: {
+						memberClasses: true,
+						ownedClasses: true,
+						taughtClasses: true,
+					},
+				});
+			},
+		});
 	},
 });
