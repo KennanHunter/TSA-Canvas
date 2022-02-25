@@ -14,6 +14,63 @@ export const User = objectType({
 		t.string("pronouns");
 		t.nonNull.string("email");
 		t.nonNull.boolean("isGuest");
+		t.list.field("ownedClasses", {
+			type: "Class",
+			async resolve(parent, args, context: Context) {
+				if (parent.id === context.userId) {
+					return (
+						await context.prisma.user.findUnique({
+							where: { id: parent.id },
+							include: {
+								ownedClasses: true,
+							},
+						})
+					).ownedClasses;
+				} else {
+					throw new AuthenticationError(
+						"You are not allowed to see this data",
+					);
+				}
+			},
+		});
+		t.list.field("memberClasses", {
+			type: "Class",
+			async resolve(parent, args, context: Context) {
+				if (parent.id === context.userId) {
+					return (
+						await context.prisma.user.findUnique({
+							where: { id: parent.id },
+							include: {
+								memberClasses: true,
+							},
+						})
+					).memberClasses;
+				} else {
+					throw new AuthenticationError(
+						"You are not allowed to see this data",
+					);
+				}
+			},
+		});
+		t.list.field("taughtClasses", {
+			type: "Class",
+			async resolve(parent, args, context: Context) {
+				if (parent.id === context.userId) {
+					return (
+						await context.prisma.user.findUnique({
+							where: { id: parent.id },
+							include: {
+								taughtClasses: true,
+							},
+						})
+					).taughtClasses;
+				} else {
+					throw new AuthenticationError(
+						"You are not allowed to see this data",
+					);
+				}
+			},
+		});
 	},
 });
 
@@ -147,7 +204,9 @@ export const selfQuery = extendType({
 			type: "User",
 			resolve(parent, args, context: Context) {
 				if (!context.userId) {
-					throw new AuthenticationError("Cannot do query while not logged in")
+					throw new AuthenticationError(
+						"Cannot do query while not logged in",
+					);
 				}
 				return context.prisma.user.findUnique({
 					where: {
