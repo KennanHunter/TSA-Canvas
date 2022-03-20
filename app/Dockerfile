@@ -1,11 +1,7 @@
-FROM node:17-alpine3.14 as builder
+FROM "node"
 WORKDIR /app
+COPY *.json *.lock ./
+RUN npm install
 COPY . .
-RUN yarn install
-RUN yarn build
-
-FROM nginx:latest
-WORKDIR /usr/share/nginx/html
-RUN touch /etc/nginx/localhost.crt
-RUN touch /etc/nginx/localhost.key
-COPY --from=builder /app/public/build ./
+RUN npm run build
+CMD [ "node", "./build" ]
