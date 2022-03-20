@@ -10,6 +10,7 @@
 	<h1>index</h1>
 	<il>
 		<li><a href="/heartbeat">heartbeat</a></li>
+		<li><a href="/classes">classes</a></li>
 	</il>
 </section>
 

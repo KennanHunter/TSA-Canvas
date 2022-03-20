@@ -5,3 +5,5 @@ export * from "./entities/User";
 export * from "./entities/Class";
 
 export * from "./auth";
+
+export * from "./heartbeat";

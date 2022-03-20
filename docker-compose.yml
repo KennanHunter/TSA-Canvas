@@ -22,11 +22,11 @@ services:
         environment:
             - DATABASE_URL=postgresql://postgres:password@tsa-canvas-db-1:5432/tsa-canvas-db
             - PORT=8000
-            - APP_SECRET=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTQ2Nzc3MzQ5Nn0.v0Gfc9fKDQfkDningjmObkD5-EcbfWy5vuvuOimTV032iCoOaaQtCsZxQC78JbLbeQNLUA3UaQnuLgvwwqLmIg
+            - JWT_SECRET=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTQ2Nzc3MzQ5Nn0.v0Gfc9fKDQfkDningjmObkD5-EcbfWy5vuvuOimTV032iCoOaaQtCsZxQC78JbLbeQNLUA3UaQnuLgvwwqLmIg
     db:
         image: postgres:14.1
         volumes:
-            - ./postgresdata:/var/lib/postgresql/data
+            - ./data/postgres:/var/lib/postgresql/data
         ports:
             - 5432:5432
         environment:
@@ -34,14 +34,16 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_DB=tsa-canvas-db
     minio:
-        image: bitnami/minio:latest
+        image: minio/minio:latest
         volumes:
-            - ./miniodata:/data
+            - ./data/minio:/data
         ports:
             - 9000:9000
             - 9001:9001
     app:
         build:
             context: ./app
+        environment:
+            - PORT=3000
 volumes:
     db-data:
