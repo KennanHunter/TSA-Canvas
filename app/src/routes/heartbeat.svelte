@@ -13,8 +13,12 @@
 	});
 </script>
 
+<svelte:head>
+	<title>heartbeat</title>
+</svelte:head>
+
 <section>
 	<h1>
-		{heartbeat ? "API is online" : "API is inaccessable"}
+		{heartbeat ? "API is online" : "API is inaccessible"}
 	</h1>
 </section>

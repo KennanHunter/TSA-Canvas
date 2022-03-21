@@ -44,6 +44,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Signup</title>
+</svelte:head>
+
 <form>
 	<label for="email">Email: </label>
 	<input type="text" name="email" id="" bind:value={data.email} required />

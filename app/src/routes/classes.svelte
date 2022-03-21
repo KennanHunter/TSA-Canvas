@@ -29,6 +29,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Class Dashboard</title>
+</svelte:head>
+
 <section>
 	<ul>
 		{#each classes as klass}
