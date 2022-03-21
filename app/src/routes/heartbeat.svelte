@@ -5,13 +5,11 @@
 
 	let heartbeat: boolean = false;
 	onMount(async () => {
-		console.log("on mount activated");
 		heartbeat = (
 			await query({
 				heartbeat: true,
 			})
 		).heartbeat;
-		console.log("await done");
 	});
 </script>
 

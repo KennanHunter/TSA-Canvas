@@ -3,16 +3,42 @@
 
 	import { onMount } from "svelte";
 
-	let classes;
+	let classes = [];
+
 	onMount(async () => {
-		classes = (
-			await query({
-				self: true,
-			})
-		).classes;
+		const { self } = await query({
+			self: {
+				memberClasses: {
+					name: true,
+				},
+				ownedClasses: {
+					name: true,
+				},
+				taughtClasses: {
+					name: true,
+				},
+			},
+		});
+		classes = [].concat(
+			self.memberClasses,
+			self.ownedClasses,
+			self.taughtClasses,
+		);
+		console.log(classes);
+		console.log(self.ownedClasses);
 	});
 </script>
 
 <section>
-	{classes}
+	<ul>
+		{#each classes as klass}
+			<li>
+				<div>
+					<hi>{klass.name} </hi>
+				</div>
+			</li>
+		{:else}
+			<h1>No classes</h1>
+		{/each}
+	</ul>
 </section>

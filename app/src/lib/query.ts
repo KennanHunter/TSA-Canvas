@@ -1,10 +1,25 @@
+import { page } from "$app/stores";
 import { Thunder } from "$zeus";
+import { onMount } from "svelte";
 
-let authorizationHeader: string =
-	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbDB5ZWszOXQwMDA0OGFwZm53MzBmam9yIiwiaXNHdWVzdCI6ZmFsc2UsImlhdCI6MTY0NzcyNzc0N30.v1I05w0M2Jo-ZtWjog6ztNcuRILafA3jgbKzye-FtZQ";
+let authorizationHeader: string = undefined;
+
+let host: string = "https://localhost";
+
+onMount(() => {
+	page.subscribe((value) => {
+		console.log(host);
+		host = value.url.host;
+	});
+});
 
 let thunder = Thunder(async (query) => {
-	const response = await fetch("https://localhost/api", {
+	if (!authorizationHeader) {
+		fromAuthStorage();
+	}
+	console.log(query);
+
+	const response = await fetch(host + "/api/", {
 		body: JSON.stringify({ query }),
 		method: "POST",
 		headers: {
@@ -29,11 +44,23 @@ let thunder = Thunder(async (query) => {
 	}
 
 	const json = await response.json();
+	console.log(json);
 	return json.data;
 });
 
-function setAuthorizationHeader(data: string) {
+function setAuthorizationHeader(data: string, remember: boolean) {
 	authorizationHeader = data;
+	if (remember) {
+		setAuthStorage(authorizationHeader);
+	}
+}
+
+function fromAuthStorage() {
+	authorizationHeader = localStorage.getItem("token");
+}
+
+function setAuthStorage(token: string) {
+	localStorage.setItem("token", token);
 }
 
 const query = thunder("query");

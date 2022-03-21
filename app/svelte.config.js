@@ -13,14 +13,15 @@ const config = {
 
 		trailingSlash: "always",
 
-		// Override http methods in the Todo forms
-		methodOverride: {
-			allowed: ["PATCH", "DELETE"],
-		},
 		vite: {
 			resolve: {
 				alias: {
 					$zeus: resolve("./zeus"),
+				},
+			},
+			server: {
+				fs: {
+					allow: ["./zeus"],
 				},
 			},
 		},
