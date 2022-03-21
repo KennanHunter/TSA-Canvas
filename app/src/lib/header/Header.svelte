@@ -1,6 +1,20 @@
 <script lang="ts">
 	import { page } from "$app/stores";
+	import { query } from "$lib/query";
+	import { onMount } from "svelte";
 	import logo from "./svelte-logo.svg";
+
+	let name: string;
+
+	// onMount(async () => {
+	// 	name = (
+	// 		await query({
+	// 			self: {
+	// 				name: true,
+	// 			},
+	// 		})
+	// 	).self.name;
+	// });
 </script>
 
 <header>
@@ -25,7 +39,11 @@
 	</nav>
 
 	<div class="corner">
-		<!-- TODO put something else here? github link? -->
+		{#if name}
+			Currently Signed In As: {name}
+		{:else}
+			Not Signed In
+		{/if}
 	</div>
 </header>
 

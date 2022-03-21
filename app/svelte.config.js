@@ -23,6 +23,11 @@ const config = {
 				fs: {
 					allow: ["./zeus"],
 				},
+				// proxy: {
+				// 	"api": {
+				// 		target: "https://localhost/api",
+				// 	},
+				// },
 			},
 		},
 	},

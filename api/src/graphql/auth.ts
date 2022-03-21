@@ -1,5 +1,6 @@
 import { objectType } from "nexus";
 import * as jwt from "jsonwebtoken";
+import { AuthenticationError } from "apollo-server-errors";
 
 export const AuthPayload = objectType({
 	name: "AuthPayload",
@@ -16,11 +17,18 @@ export interface AuthTokenPayload {
 	isGuest: boolean;
 }
 
-export function decodeAuthHeader(authHeader: String): AuthTokenPayload {
+export function decodeAuthHeader(
+	authHeader: String,
+): AuthTokenPayload | AuthenticationError {
 	const token = authHeader.replace("Bearer ", "");
 
 	if (!token) {
 		throw new Error("No token found");
 	}
-	return jwt.verify(token, process.env.JWT_SECRET) as AuthTokenPayload;
+	try {
+		const verified = jwt.verify(token, process.env.JWT_SECRET);
+		return verified as AuthTokenPayload;
+	} catch {
+		return new AuthenticationError("Not logged in");
+	}
 }

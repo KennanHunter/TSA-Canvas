@@ -1,17 +1,9 @@
-import { page } from "$app/stores";
+import { goto } from "$app/navigation";
 import { Thunder } from "$zeus";
-import { onMount } from "svelte";
 
 let authorizationHeader: string = undefined;
 
 let host: string = "https://localhost";
-
-onMount(() => {
-	page.subscribe((value) => {
-		console.log(host);
-		host = value.url.host;
-	});
-});
 
 let thunder = Thunder(async (query) => {
 	if (!authorizationHeader) {
@@ -45,7 +37,11 @@ let thunder = Thunder(async (query) => {
 
 	const json = await response.json();
 	console.log(json);
-	return json.data;
+	if (json.data) {
+		return json.data;
+	} else {
+		goto("/auth/login");
+	}
 });
 
 function setAuthorizationHeader(data: string, remember: boolean) {
@@ -67,4 +63,4 @@ const query = thunder("query");
 
 const mutation = thunder("mutation");
 
-export { query, setAuthorizationHeader, mutation, authorizationHeader };
+export { query, mutation, setAuthorizationHeader, authorizationHeader };
