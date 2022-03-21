@@ -51,8 +51,21 @@ model Class {
   owner   User   @relation(name: "Owner", fields: [ownerId], references: [id])
   ownerId String
 
-  teachers User[] @relation(name: "taughtClasses")
-  members  User[] @relation(name: "memberClasses")
+  teachers User[]         @relation(name: "taughtClasses")
+  members  User[]         @relation(name: "memberClasses")
+  invites  ClassInvites[] @relation(name: "invites")
+}
+
+model ClassInvites {
+  id String @id @default(cuid())
+
+  createdAt  DateTime @default(now())
+  expireTime Int?
+
+  timesUsed Int @default(0)
+
+  Class   Class?  @relation("invites", fields: [classId], references: [id])
+  classId String?
 }
 
 model Assignment {

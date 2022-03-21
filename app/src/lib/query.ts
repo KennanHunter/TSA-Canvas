@@ -1,3 +1,4 @@
+import { browser, dev } from "$app/env";
 import { page } from "$app/stores";
 import { Thunder } from "$zeus";
 import { onMount } from "svelte";
@@ -6,14 +7,11 @@ let authorizationHeader: string = undefined;
 
 let host: string = "https://localhost";
 
-onMount(() => {
-	page.subscribe((value) => {
-		console.log(host);
-		host = value.url.host;
-	});
-});
-
 let thunder = Thunder(async (query) => {
+	if (!browser) {
+		throw new Error("Can't run queries on server");
+	}
+
 	if (!authorizationHeader) {
 		fromAuthStorage();
 	}
