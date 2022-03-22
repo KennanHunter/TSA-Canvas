@@ -121,29 +121,29 @@ export const ClassMutation = extendType({
 
 				return newClass;
 			},
-		// });
-		// t.nonNull.field("addMember", {
-		// 	type: Class,
-		// 	args: {
-		// 		classId: nonNull(stringArg()),
-		// 		studentId: nonNull(stringArg()),
-		// 	},
-		// 	async resolve(parent, args, context: Context) {
-		// 		const { classId, studentId } = args;
+			// });
+			// t.nonNull.field("addMember", {
+			// 	type: Class,
+			// 	args: {
+			// 		classId: nonNull(stringArg()),
+			// 		studentId: nonNull(stringArg()),
+			// 	},
+			// 	async resolve(parent, args, context: Context) {
+			// 		const { classId, studentId } = args;
 
-		// 		if (
-		// 			(
-		// 				await context.prisma.class
-		// 					.findUnique({
-		// 						where: {
-		// 							id: classId,
-		// 						},
-		// 					})
-		// 					.owner()
-		// 			).id !== context.userId
-		// 		) {
-		// 			throw new AuthenticationError("User does not own class");
-		// 		}
+			// 		if (
+			// 			(
+			// 				await context.prisma.class
+			// 					.findUnique({
+			// 						where: {
+			// 							id: classId,
+			// 						},
+			// 					})
+			// 					.owner()
+			// 			).id !== context.userId
+			// 		) {
+			// 			throw new AuthenticationError("User does not own class");
+			// 		}
 
 			// 	const newClass = context.prisma.class.update({
 			// 		where: {
