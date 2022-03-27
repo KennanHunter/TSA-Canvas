@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { query } from "$lib/query";
+	import { goto } from "$app/navigation";
 
+	import { query } from "$lib/query";
 	import { onMount } from "svelte";
 
-	let classes = [];
+	let classes: { name: string }[] = [];
 
 	onMount(async () => {
 		const { self } = await query({
@@ -19,6 +20,7 @@
 				},
 			},
 		});
+
 		classes = [].concat(
 			self.memberClasses,
 			self.ownedClasses,
@@ -46,3 +48,7 @@
 		{/each}
 	</ul>
 </section>
+
+<aside>
+	<a href="/class/create/"><button> Create Class </button> </a>
+</aside>

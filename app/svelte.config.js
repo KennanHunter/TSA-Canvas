@@ -29,6 +29,9 @@ const config = {
 				// 	},
 				// },
 			},
+			optimizeDeps: {
+				exclude: ["totalist", "sirv", "local-access"],
+			},
 		},
 	},
 };

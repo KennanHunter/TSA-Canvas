@@ -6,7 +6,6 @@
 		mutation,
 		setAuthorizationHeader,
 	} from "$lib/query";
-	import Classes from "../classes.svelte";
 
 	interface UserRequestData {
 		email?: string;
