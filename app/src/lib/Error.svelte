@@ -1,5 +1,12 @@
 <script lang="ts">
-	export let error = "An Unspecified Error has Occured";
+	import { onMount } from "svelte";
+
+	export let error = {};
+	export let message: string = "An unspecified error has occured";
+
+	onMount(() => {
+		console.log(error);
+	});
 </script>
 
-<h1>{error}</h1>
+<h1>{message}</h1>

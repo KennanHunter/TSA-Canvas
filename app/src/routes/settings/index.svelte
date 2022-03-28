@@ -6,8 +6,8 @@
 <h1>Settings</h1>
 {#await query({ self: { name: true } }) then value}
 	<h1>{value.self.name}</h1>
-{:catch}
-	<Error />
+{:catch error}
+	<Error {error} />
 {/await}
 
 <input />

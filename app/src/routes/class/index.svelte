@@ -4,19 +4,22 @@
 	import { query } from "$lib/query";
 	import { onMount } from "svelte";
 
-	let classes: { name: string }[] = [];
+	let classes: { name: string; id: string }[] = [];
 
 	onMount(async () => {
 		const { self } = await query({
 			self: {
 				memberClasses: {
 					name: true,
+					id: true,
 				},
 				ownedClasses: {
 					name: true,
+					id: true,
 				},
 				taughtClasses: {
 					name: true,
+					id: true,
 				},
 			},
 		});
@@ -40,7 +43,9 @@
 		{#each classes as klass}
 			<li>
 				<div>
-					<hi>{klass.name} </hi>
+					<a href={"/class/" + klass.id}>
+						<hi>{klass.name} </hi>
+					</a>
 				</div>
 			</li>
 		{:else}
