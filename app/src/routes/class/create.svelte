@@ -9,14 +9,14 @@
 
 	function submit() {
 		mutation({
-			create: [
+			createClass: [
 				{ name: submissionData.name, color: submissionData.color },
 				{
 					id: true,
 				},
 			],
 		}).then((value) => {
-			goto("/class/" + value.create.id);
+			goto("/class/" + value.createClass.id);
 		});
 	}
 </script>

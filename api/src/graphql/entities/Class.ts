@@ -102,7 +102,7 @@ export const ClassQuery = extendType({
 export const ClassMutation = extendType({
 	type: "Mutation",
 	definition(t) {
-		t.nonNull.field("create", {
+		t.nonNull.field("createClass", {
 			type: Class,
 			args: {
 				name: nonNull(stringArg()),

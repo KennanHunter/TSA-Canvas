@@ -1,29 +1,10 @@
-<script>
-	import { page } from "$app/stores";
-</script>
+<menu>
+	<ul>
+		<li>Class Page</li>
+		<li>Grades</li>
 
-<div>
-	<menu>
-		<ul>
-			<a href={"/class/" + $page.params.id}><li>Class Page</li></a>
-			<a href={"/class/" + $page.params.id + "/grades/"}
-				><li>Grades</li></a
-			>
-
-			<a href={"/class/" + $page.params.id + "/members/"}
-				><li>Class Members</li></a
-			>
-			<a href={"/class/" + $page.params.id + "/settings/"}
-				><li>Settings</li></a
-			>
-		</ul>
-	</menu>
-	<slot />
-</div>
-
-<style>
-	div {
-		display: grid;
-		grid-template-columns: 10% auto;
-	}
-</style>
+		<li>Class Members</li>
+		<li>Class Settings</li>
+	</ul>
+</menu>
+<slot />

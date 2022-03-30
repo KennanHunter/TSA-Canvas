@@ -3,6 +3,7 @@
 cd ../api
 yarn install
 yarn generate
+cp .env.example .env
 
 cd ../app
 yarn install

@@ -12,6 +12,7 @@ services:
             - 443:443
         depends_on:
             - api
+            - app
     api:
         build:
             context: ./api
@@ -51,6 +52,8 @@ services:
             dockerfile: ./Dockerfile.dev
         environment:
             - PORT=3000
+        ports:
+            - 3000:3000
         volumes:
             - ./app/node_modules/:/app/node_modules
             - ./app/src/:/app/src
