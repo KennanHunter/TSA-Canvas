@@ -1,54 +1,19 @@
 import { browser, dev } from "$app/env";
 import { page } from "$app/stores";
 import { goto } from "$app/navigation";
-import { Thunder } from "$zeus";
+import { Thunder, Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
 
+interface GQLResponse extends GraphQLResponse {
+	errors?: Array<{
+		message: string;
+		extensions: {
+			code: String;
+		};
+	}>;
+}
 let authorizationHeader: string = undefined;
 
 let host: string = "https://localhost";
-
-let thunder = Thunder(async (query) => {
-	if (!browser) {
-		throw new Error("Can't run queries on server");
-	}
-
-	if (!authorizationHeader) {
-		fromAuthStorage();
-	}
-	console.log(query);
-
-	const response = await fetch(host + "/api/", {
-		body: JSON.stringify({ query }),
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: "Bearer " + authorizationHeader,
-		},
-	});
-
-	if (!response.ok) {
-		return new Promise((resolve, reject) => {
-			response
-				.text()
-				.then((text) => {
-					try {
-						reject(JSON.parse(text));
-					} catch (err) {
-						reject(text);
-					}
-				})
-				.catch(reject);
-		});
-	}
-
-	const json = await response.json();
-	console.log(json);
-	if (json.data) {
-		return json.data;
-	} else {
-		goto("/auth/login");
-	}
-});
 
 function setAuthorizationHeader(data: string, remember: boolean) {
 	authorizationHeader = data;
@@ -65,8 +30,41 @@ function setAuthStorage(token: string) {
 	localStorage.setItem("token", token);
 }
 
-const query = thunder("query");
+async function postEndpoint(query: string, fetchFunction: typeof fetch) {
+	if (!authorizationHeader) {
+		if (browser) {
+			fromAuthStorage();
+		} else {
+		}
+	}
 
-const mutation = thunder("mutation");
+	const response = await fetchFunction(host + "/api/", {
+		body: JSON.stringify({ query }),
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: "Bearer " + authorizationHeader,
+		},
+	});
+
+	let jason = (await response.json()) as GQLResponse;
+	console.log(jason);
+	if (jason.errors) {
+		switch (jason.errors[0].extensions.code) {
+			case "UNAUTHENTICATED":
+				goto("/auth/login");
+				break;
+		}
+	}
+	return jason.data;
+}
+
+function query(query: ValueTypes["Query"], fetchFunction?: typeof fetch) {
+	return postEndpoint(Zeus("query", query), fetchFunction || fetch);
+}
+
+function mutation(query: ValueTypes["Mutation"], fetchFunction?: typeof fetch) {
+	return postEndpoint(Zeus("mutation", query), fetchFunction || fetch);
+}
 
 export { query, mutation, setAuthorizationHeader, authorizationHeader };
