@@ -1,23 +1,37 @@
-<script lang="ts">
-	import { page } from "$app/stores";
-	import Loading from "$lib/Loading.svelte";
-
-	import { query } from "$lib/query";
-
-	import { onMount } from "svelte";
-
-	// onMount(() => {
-	// 	return
-	// });
+<script context="module" lang="ts">
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		return {
+			props: {
+				value: await query(
+					{
+						Class: [
+							{ classId: params.id },
+							{ name: true, owner: { name: true } },
+						],
+					},
+					fetch,
+				),
+			},
+		};
+	}
 </script>
 
-{#await query( { Class: [{ classId: $page.params.id }, { name: true, owner: { name: true } }] }, )}
-	<Loading />
-{:then value}
-	<h1>{value.Class.name}</h1>
-	<h3><em>Owned by</em> {value.Class.owner.name}</h3>
+<script lang="ts">
+	import { page } from "$app/stores";
+	import { query } from "$lib/query";
+	import type { ValueTypes } from "$zeus/index";
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+	export let value: { Class: ValueTypes["Class"] };
+</script>
 
-	<a href={$page.url.href + "assignment/create"}
-		><button>Create assignment</button></a
-	>
-{/await}
+<h1>{value.Class.name}</h1>
+<h3><em>Owned by</em> {value.Class.owner.name}</h3>
+
+<a href={$page.url.href + "assignment/create"}
+	><button>Create assignment</button></a
+>

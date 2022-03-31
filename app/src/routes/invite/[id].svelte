@@ -1,31 +1,43 @@
+<script context="module" lang="ts">
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		return {
+			props: {
+				classInformation: (
+					await query({
+						getInvite: [
+							{
+								inviteId: params.id,
+							},
+							{
+								name: true,
+							},
+						],
+					})
+				).getInvite,
+			},
+		};
+	}
+</script>
+
 <script lang="ts">
 	import { page } from "$app/stores";
 
 	import { mutation, query } from "$lib/query";
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 	import { onMount } from "svelte";
 
 	interface ClassInformation {
 		name: String;
 	}
 
-	let classInformation: ClassInformation = {
+	export let classInformation: ClassInformation = {
 		name: "",
 	};
-
-	onMount(async () => {
-		classInformation = (
-			await query({
-				getInvite: [
-					{
-						inviteId: $page.params.id,
-					},
-					{
-						name: true,
-					},
-				],
-			})
-		).getInvite;
-	});
 
 	function acceptInvite() {
 		mutation({

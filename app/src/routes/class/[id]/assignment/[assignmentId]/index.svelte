@@ -1,13 +1,33 @@
-<script>
-	import { page } from "$app/stores";
-
-	import Loading from "$lib/Loading.svelte";
-	import { query } from "$lib/query";
+<script context="module" lang="ts">
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		return {
+			props: {
+				value: query(
+					{
+						Assignment: [
+							{ assignmentId: params.assignmentId },
+							{ name: true, description: true },
+						],
+					},
+					fetch,
+				),
+			},
+		};
+	}
 </script>
 
-{#await query( { Assignment: [{ assignmentId: $page.params.assignmentId }, { name: true, description: true }] }, )}
-	<Loading />
-{:then value}
-	<h1>{value.Assignment.name}</h1>
-	<p>{value.Assignment.description}</p>
-{/await}
+<script lang="ts">
+	import { query } from "$lib/query";
+	import type { ValueTypes } from "$zeus/index";
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+
+	export let value: { Assignment: ValueTypes["Assignment"] };
+</script>
+
+<h1>{value.Assignment.name}</h1>
+<p>{value.Assignment.description}</p>
