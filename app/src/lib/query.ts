@@ -2,6 +2,7 @@ import { browser, dev } from "$app/env";
 import { page } from "$app/stores";
 import { goto } from "$app/navigation";
 import { Thunder, Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
+import type { LoadOutput } from "@sveltejs/kit/types/internal";
 
 interface GQLResponse extends GraphQLResponse {
 	errors?: Array<{
@@ -11,6 +12,7 @@ interface GQLResponse extends GraphQLResponse {
 		};
 	}>;
 }
+
 let authorizationHeader: string = undefined;
 
 let host: string = "https://localhost";
@@ -18,12 +20,23 @@ let host: string = "https://localhost";
 function setAuthorizationHeader(data: string, remember: boolean) {
 	authorizationHeader = data;
 	if (remember) {
+		document.cookie = "authentication=" + authorizationHeader;
 		setAuthStorage(authorizationHeader);
 	}
 }
 
 function fromAuthStorage() {
 	authorizationHeader = localStorage.getItem("token");
+}
+
+function fromCookie(response: Request) {
+	authorizationHeader = response.headers["Cookie"]
+		.split("; ")
+		.find((row) => row.startsWith("authentication="))
+		.split("=")[1];
+	if (!authorizationHeader) {
+		throw Error("No cookie");
+	}
 }
 
 function setAuthStorage(token: string) {
@@ -34,7 +47,6 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 	if (!authorizationHeader) {
 		if (browser) {
 			fromAuthStorage();
-		} else {
 		}
 	}
 
@@ -48,11 +60,14 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 	});
 
 	let jason = (await response.json()) as GQLResponse;
-	console.log(jason);
 	if (jason.errors) {
 		switch (jason.errors[0].extensions.code) {
 			case "UNAUTHENTICATED":
-				goto("/auth/login");
+				if (browser) {
+					goto("/auth/login");
+				} else {
+					throw new Error("UNAUTHENTICATED");
+				}
 				break;
 		}
 	}
@@ -67,4 +82,16 @@ function mutation(query: ValueTypes["Mutation"], fetchFunction?: typeof fetch) {
 	return postEndpoint(Zeus("mutation", query), fetchFunction || fetch);
 }
 
-export { query, mutation, setAuthorizationHeader, authorizationHeader };
+function authRedirect(): LoadOutput<Record<string, any>> {
+	return {
+		redirect: encodeURIComponent("/auth/login"),
+	};
+}
+export {
+	query,
+	mutation,
+	setAuthorizationHeader,
+	authorizationHeader,
+	fromCookie,
+	authRedirect,
+};

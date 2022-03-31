@@ -1,39 +1,47 @@
-<script lang="ts">
-	import { goto } from "$app/navigation";
-
-	import { query } from "$lib/query";
-	import { onMount } from "svelte";
-
-	let classes: { name: string; id: string }[] = [];
-
-	onMount(async () => {
-		const { self } = await query({
-			self: {
-				memberClasses: {
-					name: true,
-					id: true,
-				},
-				ownedClasses: {
-					name: true,
-
-					id: true,
-				},
-				taughtClasses: {
-					name: true,
-
-					id: true,
+<script lang="ts" context="module">
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		const { self } = await query(
+			{
+				self: {
+					memberClasses: {
+						name: true,
+						id: true,
+					},
+					ownedClasses: {
+						name: true,
+						id: true,
+					},
+					taughtClasses: {
+						name: true,
+						id: true,
+					},
 				},
 			},
-		});
-
-		classes = [].concat(
-			self.memberClasses,
-			self.ownedClasses,
-			self.taughtClasses,
+			fetch,
 		);
-		console.log(classes);
-		console.log(self.ownedClasses);
-	});
+
+		return {
+			props: {
+				classes: [].concat(
+					self.memberClasses,
+					self.ownedClasses,
+					self.taughtClasses,
+				),
+			},
+		};
+	}
+</script>
+
+<script lang="ts">
+	import { query } from "$lib/query";
+	import type { LoadInput,LoadOutput } from "@sveltejs/kit/types/internal";
+
+	export let classes: { name: string; id: string }[] = [];
 </script>
 
 <svelte:head>
