@@ -1,1 +1,6 @@
 data
+
+# For when i mess up where i run yarn
+package.json
+node_modules
+yarn.lock

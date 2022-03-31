@@ -60,12 +60,12 @@ export const AssignmentQuery = extendType({
 				// classId: nonNull(stringArg()),
 				assignmentId: nonNull(stringArg()),
 			},
-			resolve(
+			async resolve(
 				parent,
 				args: { classId: string; assignmentId: string },
 				context: Context,
 			) {
-				context.prisma.assignment
+				let query = await context.prisma.assignment
 					.findUnique({
 						where: {
 							id: args.assignmentId,
@@ -80,30 +80,27 @@ export const AssignmentQuery = extendType({
 							},
 						},
 					})
-					.then((query) => {
-						if (query.Class.owner.id === context.userId) {
-							return query;
-						}
-
-						query.Class.members.forEach((user) => {
-							if (user.id === context.userId) {
-								return query;
-							}
-						});
-
-						query.Class.teachers.forEach((user) => {
-							if (user.id === context.userId) {
-								return query;
-							}
-						});
-
-						throw new AuthenticationError(
-							"Must be part of class to query",
-						);
-					})
 					.catch(() => {
 						throw new ApolloError("Assignment doesn't exist");
 					});
+
+				if (query.Class.owner.id === context.userId) {
+					return query;
+				}
+
+				query.Class.members.forEach((user) => {
+					if (user.id === context.userId) {
+						return query;
+					}
+				});
+
+				query.Class.teachers.forEach((user) => {
+					if (user.id === context.userId) {
+						return query;
+					}
+				});
+
+				throw new AuthenticationError("Must be part of class to query");
 			},
 		});
 	},
