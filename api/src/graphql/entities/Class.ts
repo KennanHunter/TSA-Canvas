@@ -51,7 +51,6 @@ export const Class = objectType({
 		t.list.field("assignments", {
 			type: "Assignment",
 			resolve(parent, args, context: Context) {
-				console.log(parent.id);
 				return context.prisma.class
 					.findUnique({
 						where: { id: parent.id },

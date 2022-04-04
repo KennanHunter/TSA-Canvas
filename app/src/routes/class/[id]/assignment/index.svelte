@@ -24,6 +24,11 @@
 									assignments: {
 										id: true,
 										name: true,
+										class: {
+											owner: {
+												name: true,
+											},
+										},
 									},
 								},
 							],
@@ -37,10 +42,18 @@
 </script>
 
 <script lang="ts">
+	import { page } from "$app/stores";
+
 	export let assignments: ValueTypes["Assignment"][];
-	console.log(assignments);
 </script>
 
 {#each assignments as assignment}
-	{assignment.name}
+	<div>
+		<a href={$page.url.href + assignment.id}>
+			<h2>
+				{assignment.name}
+			</h2>
+		</a>
+		<p>{assignment.class.owner.name}</p>
+	</div>
 {/each}

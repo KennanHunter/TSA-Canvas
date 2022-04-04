@@ -13,39 +13,38 @@ export const Assignment = objectType({
 		t.nonNull.int("maxGrade");
 		t.nonNull.field("class", {
 			type: Class,
-			resolve(parent, args, context: Context) {
-				context.prisma.assignment
-					.findUnique({
-						where: {
-							id: parent.id,
-						},
-						include: {
-							Class: {
-								include: {
-									members: true,
-									teachers: true,
-								},
+			async resolve(parent, args, context: Context) {
+				console.log(parent.id);
+				let value = await context.prisma.assignment.findUnique({
+					where: {
+						id: parent.id,
+					},
+					include: {
+						Class: {
+							include: {
+								members: true,
+								teachers: true,
 							},
 						},
-					})
-					.then((value) => {
-						value.Class.members.forEach((member) => {
-							if (context.userId === member.id) {
-								return value.Class;
-							}
-						});
-						value.Class.teachers.forEach((member) => {
-							if (context.userId === member.id) {
-								return value.Class;
-							}
-						});
-						if (context.userId === value.Class.ownerId) {
-							return value.Class;
-						}
-						throw new AuthenticationError(
-							"Must be part of assignment to query",
-						);
-					});
+					},
+				});
+				console.log(value);
+				value.Class.members.forEach((member) => {
+					if (context.userId === member.id) {
+						return value.Class;
+					}
+				});
+				value.Class.teachers.forEach((member) => {
+					if (context.userId === member.id) {
+						return value.Class;
+					}
+				});
+				if (context.userId === value.Class.ownerId) {
+					return value.Class;
+				}
+				throw new AuthenticationError(
+					"Must be part of assignment to query",
+				);
 			},
 		});
 	},

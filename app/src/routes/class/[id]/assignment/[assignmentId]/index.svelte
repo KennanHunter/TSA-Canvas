@@ -7,15 +7,17 @@
 	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
 		return {
 			props: {
-				value: query(
-					{
-						Assignment: [
-							{ assignmentId: params.assignmentId },
-							{ name: true, description: true },
-						],
-					},
-					fetch,
-				),
+				assignment: (
+					await query(
+						{
+							Assignment: [
+								{ assignmentId: params.assignmentId },
+								{ name: true, description: true },
+							],
+						},
+						fetch,
+					)
+				).Assignment,
 			},
 		};
 	}
@@ -26,8 +28,8 @@
 	import type { ValueTypes } from "$zeus/index";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
-	export let value: { Assignment: ValueTypes["Assignment"] };
+	export let assignment: ValueTypes["Assignment"];
 </script>
 
-<h1>{value.Assignment.name}</h1>
-<p>{value.Assignment.description}</p>
+<h1>{assignment.name}</h1>
+<p>{assignment.description}</p>
