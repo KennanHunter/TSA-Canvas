@@ -14,7 +14,6 @@ export const Assignment = objectType({
 		t.nonNull.field("class", {
 			type: Class,
 			async resolve(parent, args, context: Context) {
-				console.log(parent.id);
 				let value = await context.prisma.assignment.findUnique({
 					where: {
 						id: parent.id,
@@ -28,7 +27,6 @@ export const Assignment = objectType({
 						},
 					},
 				});
-				console.log(value);
 				value.Class.members.forEach((member) => {
 					if (context.userId === member.id) {
 						return value.Class;
