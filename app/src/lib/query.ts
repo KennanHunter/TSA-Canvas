@@ -50,6 +50,8 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 		}
 	}
 
+	console.log(query);
+
 	const response = await fetchFunction(host + "/api/", {
 		body: JSON.stringify({ query }),
 		method: "POST",
@@ -71,6 +73,8 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 				break;
 		}
 	}
+
+	console.log(jason.errors || jason.data);
 	return jason.data;
 }
 

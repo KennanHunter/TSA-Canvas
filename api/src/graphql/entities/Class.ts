@@ -1,11 +1,5 @@
-import { AuthenticationError, UserInputError } from "apollo-server";
-import {
-	extendType,
-	nonNull,
-	objectType,
-	queryComplexityPlugin,
-	stringArg,
-} from "nexus";
+import { AuthenticationError } from "apollo-server";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 
 export const Class = objectType({
@@ -52,6 +46,17 @@ export const Class = objectType({
 						where: { id: parent.id },
 					})
 					.owner();
+			},
+		});
+		t.list.field("assignments", {
+			type: "Assignment",
+			resolve(parent, args, context: Context) {
+				console.log(parent.id);
+				return context.prisma.class
+					.findUnique({
+						where: { id: parent.id },
+					})
+					.assignments();
 			},
 		});
 	},
