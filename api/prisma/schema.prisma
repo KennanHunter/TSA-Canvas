@@ -29,6 +29,7 @@ model User {
   taughtClasses         Class[]                @relation(name: "taughtClasses")
   memberClasses         Class[]                @relation(name: "memberClasses")
   AssignmentSubmissions AssignmentSubmission[]
+  FileObject            FileObject[]
 }
 
 model UserPreferences {
@@ -91,4 +92,10 @@ model AssignmentSubmission {
   submittedAt  DateTime?
 
   @@id([assignmentId, userId])
+}
+
+model FileObject {
+  id      String @id @default(cuid())
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
 }

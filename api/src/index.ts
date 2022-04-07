@@ -1,5 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "apollo-server";
-import { context } from "./context";
+import { request } from "express";
+import { context, Context } from "./context";
 
 require("dotenv").config({ path: "../.env" });
 

@@ -77,6 +77,10 @@ export const User = objectType({
 export const UserMutation = extendType({
 	type: "Mutation",
 	definition(t) {
+		t.nonNull.field("uploadProfilePicture", {
+			type: "String",
+			async resolve(parent, args, context: Context) {},
+		});
 		t.nonNull.field("signup", {
 			type: "AuthPayload",
 			args: {
