@@ -2,7 +2,7 @@
 FULL_PATH_TO_SCRIPT="$(realpath "${BASH_SOURCE[-1]}")"
 SCRIPT_DIRECTORY="$(dirname "$FULL_PATH_TO_SCRIPT")"
 
-cd $SCRIPT_DIRECTORY/../
+cd $SCRIPT_DIRECTORY/
 
 cd ../api
 yarn install
@@ -18,3 +18,4 @@ openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.ke
 
 cd ..
 cp .env.example .env
+docker-compose build
