@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { queryInit } from "$lib/query";
-	import "../app.css";
+	import "../app.scss";
 
 	queryInit();
 </script>
