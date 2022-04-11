@@ -3,6 +3,7 @@
 </script>
 
 <script>
+	import { host } from "$lib/query";
 </script>
 
 <svelte:head>
@@ -18,6 +19,9 @@
 		<li><a href="/heartbeat/">heartbeat</a></li>
 		<li><a href="/class/">classes</a></li>
 	</il>
+	<p>
+		{host}
+	</p>
 </section>
 
 <style>

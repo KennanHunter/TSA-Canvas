@@ -5,16 +5,17 @@ import { Client as MinioClient } from "minio";
 
 const prisma = new PrismaClient();
 const minio = new MinioClient({
-	endPoint: "tsa-canvas-minio-1",
+	endPoint: "192.168.0.203",
 	port: 9000,
 	useSSL: true,
 	accessKey: process.env.MINIO_ROOT_USER,
 	secretKey: process.env.MINIO_ROOT_PASSWORD,
 });
 
-minio.makeBucket("upload", "", () => {
-	console.log("Minio Bucket Made");
-});
+(async function minioInit() {
+	minio.setRequestOptions({ rejectUnauthorized: false });
+	console.log(await minio.listBuckets());
+})();
 
 export interface Context {
 	prisma: PrismaClient;

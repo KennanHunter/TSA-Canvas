@@ -11,6 +11,7 @@ services:
         ports:
             - 80:80
             - 443:443
+            - 9000:9000
         depends_on:
             - api
             - app
@@ -47,7 +48,7 @@ services:
         volumes:
             - ./data/minio:/data
         ports:
-            - 9000:9000
+            # - 9000:9000
             - 9001:9001
     app:
         build:
@@ -65,6 +66,7 @@ services:
             while ! curl -s --output /dev/null --connect-timeout 1 http://tsa-canvas-minio-1:9000; do echo 'Waiting minio...' && sleep 0.1; done;
             /usr/bin/mc alias set minio http://tsa-canvas-minio-1:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
             /usr/bin/mc mb minio/upload;
+            /usr/bin/mc policy set public minio/upload;
             exit 0;
             "
 volumes:

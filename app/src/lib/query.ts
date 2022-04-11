@@ -3,6 +3,7 @@ import { page } from "$app/stores";
 import { goto } from "$app/navigation";
 import { Thunder, Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
 import type { LoadOutput } from "@sveltejs/kit/types/internal";
+import { init } from "svelte/internal";
 
 interface GQLResponse extends GraphQLResponse {
 	errors?: Array<{
@@ -13,11 +14,26 @@ interface GQLResponse extends GraphQLResponse {
 	}>;
 }
 
-let authorizationHeader: string = undefined;
+export let authorizationHeader: string = undefined;
 
-let host: string = "https://localhost";
+export let host: string = "https://192.168.0.203";
 
-function setAuthorizationHeader(data: string, remember: boolean) {
+let inited = false;
+
+export function queryInit(hostValue?: string) {
+	if (!inited) {
+		inited = true;
+		if (hostValue) {
+			host = hostValue;
+		} else {
+			page.subscribe((value) => {
+				host = value.url.origin;
+			});
+		}
+	}
+}
+
+export function setAuthorizationHeader(data: string, remember: boolean) {
 	authorizationHeader = data;
 	if (remember) {
 		document.cookie = "authentication=" + authorizationHeader;
@@ -29,7 +45,7 @@ function fromAuthStorage() {
 	authorizationHeader = localStorage.getItem("token");
 }
 
-function fromCookie(response: Request) {
+export function fromCookie(response: Request) {
 	authorizationHeader = response.headers["Cookie"]
 		.split("; ")
 		.find((row) => row.startsWith("authentication="))
@@ -44,8 +60,9 @@ function setAuthStorage(token: string) {
 }
 
 async function postEndpoint(query: string, fetchFunction: typeof fetch) {
-	if (!authorizationHeader) {
-		if (browser) {
+	if (browser) {
+		// queryInit();
+		if (!authorizationHeader) {
 			fromAuthStorage();
 		}
 	}
@@ -78,11 +95,17 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 	return jason.data;
 }
 
-function query(query: ValueTypes["Query"], fetchFunction?: typeof fetch) {
+export function query(
+	query: ValueTypes["Query"],
+	fetchFunction?: typeof fetch,
+) {
 	return postEndpoint(Zeus("query", query), fetchFunction || fetch);
 }
 
-function mutation(query: ValueTypes["Mutation"], fetchFunction?: typeof fetch) {
+export function mutation(
+	query: ValueTypes["Mutation"],
+	fetchFunction?: typeof fetch,
+) {
 	return postEndpoint(Zeus("mutation", query), fetchFunction || fetch);
 }
 
@@ -91,11 +114,3 @@ function authRedirect(): LoadOutput<Record<string, any>> {
 		redirect: encodeURIComponent("/auth/login"),
 	};
 }
-export {
-	query,
-	mutation,
-	setAuthorizationHeader,
-	authorizationHeader,
-	fromCookie,
-	authRedirect,
-};

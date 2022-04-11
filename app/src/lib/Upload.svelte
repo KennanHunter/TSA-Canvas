@@ -1,7 +1,9 @@
-<script>
+<script lang="ts">
 	import { goto } from "$app/navigation";
 
-	import { mutation } from "./query";
+	import { host, mutation } from "./query";
+
+	let files: FileList;
 
 	function upload() {
 		let link;
@@ -14,14 +16,17 @@
 			},
 		}).then((value) => {
 			link = value.uploadFile.link;
-			goto("/file/viewer/" + value.uploadFile.file.id);
+			console.log(link);
+			fetch(link, { method: "PUT", body: files[0] }).then(() => {
+				goto("/file/viewer/" + value.uploadFile.file.id);
+			});
 		});
 	}
 </script>
 
 <div>
 	<h1>Upload File</h1>
-	<input type="file" name="" id="" />
+	<input type="file" name="" id="" bind:files />
 	<br />
 	<input type="submit" value="Upload File" on:click={upload} />
 </div>

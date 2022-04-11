@@ -1,6 +1,14 @@
 import { extendType, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 
+export function processMinioLink(link: string): string {
+	return link;
+	// .replace(
+	// 	"http://tsa-canvas-minio-1:9000/",
+	// 	"https://localhost/minio/",
+	// )
+}
+
 export const FileEntity = objectType({
 	name: "File",
 	definition(t) {
@@ -8,11 +16,16 @@ export const FileEntity = objectType({
 		t.nonNull.field("owner", {
 			type: "User",
 			async resolve(parent, args, context: Context) {
-				context.prisma.user.findUnique({
-					where: {
-						id: parent.id,
-					},
-				});
+				return (
+					await context.prisma.fileObject.findUnique({
+						where: {
+							id: parent.id,
+						},
+						include: {
+							owner: true,
+						},
+					})
+				).owner;
 			},
 		});
 	},
@@ -22,19 +35,19 @@ export const FileReturnEntity = objectType({
 	name: "FileReturn",
 	definition(t) {
 		t.nonNull.string("link");
-		t.nonNull.string("id");
 		t.nonNull.field("file", {
 			type: "File",
 			resolve(parent, args, context: Context) {
 				return context.prisma.fileObject.findUnique({
 					where: {
-						id: parent.id,
+						id: (parent.link as string).split("/")[4].split("?")[0],
 					},
 				});
 			},
 		});
 	},
 });
+
 export const FileMutation = extendType({
 	type: "Mutation",
 	definition(t) {
@@ -54,21 +67,21 @@ export const FileMutation = extendType({
 				).id;
 				console.log(objectId);
 
-				let returnUrl = await context.minio
-					.presignedPutObject("upload", objectId)
-					.catch((err) => {
-						throw new Error(err);
-					});
-				console.log(returnUrl);
+				let returnUrl = await context.minio.presignedPutObject(
+					"upload",
+					objectId,
+				);
+				console.log(processMinioLink(returnUrl));
 
 				return {
-					link: returnUrl,
-					objectId: objectId,
+					link: processMinioLink(returnUrl),
+					objectId: { id: objectId },
 				};
 			},
 		});
 	},
 });
+
 export const FileQuery = extendType({
 	type: "Query",
 	definition(t) {
@@ -78,9 +91,12 @@ export const FileQuery = extendType({
 				id: stringArg(),
 			},
 			async resolve(parent, args, context: Context) {
-				context.prisma.fileObject.findUnique({
+				return context.prisma.fileObject.findUnique({
 					where: {
 						id: args.id,
+					},
+					include: {
+						owner: true,
 					},
 				});
 			},
