@@ -6,6 +6,18 @@ import { AuthTokenPayload } from "../auth";
 import { AuthenticationError } from "apollo-server";
 import { prisma, User as Userobject } from "@prisma/client";
 
+export async function isUser(context: Context) {
+	if (context.userId) {
+		context.prisma.user.findFirst({
+			where: {
+				id: context.userId,
+			},
+		});
+	} else {
+		throw new AuthenticationError("Not Authenticated");
+	}
+}
+
 export const User = objectType({
 	name: "User",
 	definition(t) {
@@ -78,8 +90,22 @@ export const UserMutation = extendType({
 	type: "Mutation",
 	definition(t) {
 		t.nonNull.field("uploadProfilePicture", {
-			type: "String",
-			async resolve(parent, args, context: Context) {},
+			type: "User",
+			args: {
+				profileId: nonNull(stringArg()),
+			},
+			async resolve(parent, args, context: Context) {
+				isUser(context);
+
+				return context.prisma.user.update({
+					where: {
+						id: context.userId,
+					},
+					data: {
+						avatar: args.profileId,
+					},
+				});
+			},
 		});
 		t.nonNull.field("signup", {
 			type: "AuthPayload",

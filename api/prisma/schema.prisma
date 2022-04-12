@@ -20,7 +20,7 @@ model User {
   password String?
   isGuest  Boolean
   joinedAt DateTime @default(now())
-  avatar   String
+  avatar   String?
 
   UserPreferences UserPreferences?
 

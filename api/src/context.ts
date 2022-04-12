@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { decodeAuthHeader } from "./graphql/auth";
 import { Request } from "express";
 import { Client as MinioClient } from "minio";
+import { AuthenticationError } from "apollo-server-errors";
 
 const prisma = new PrismaClient();
 const minio = new MinioClient({
@@ -14,7 +15,14 @@ const minio = new MinioClient({
 
 (async function minioInit() {
 	minio.setRequestOptions({ rejectUnauthorized: false });
-	console.log(await minio.listBuckets());
+	await minio
+		.listBuckets()
+		.then((value) => {
+			console.log(value);
+		})
+		.catch(() => {
+			console.error("Cannot connect to minio");
+		});
 })();
 
 export interface Context {

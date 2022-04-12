@@ -101,5 +101,19 @@ export const FileQuery = extendType({
 				});
 			},
 		});
+		t.nonNull.list.field("allFiles", {
+			type: "File",
+			async resolve(parent, args, context: Context) {
+				return await context.prisma.fileObject
+					.findMany({
+						where: {
+							ownerId: context.userId,
+						},
+					})
+					.then((value) => {
+						console.log(value);
+					});
+			},
+		});
 	},
 });
