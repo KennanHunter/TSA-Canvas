@@ -32,7 +32,9 @@
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"],
 			"$zeus": ["zeus/"],
-			"$zeus/*": ["zeus/*"]
+			"$zeus/*": ["zeus/*"],
+			"$": ["src"],
+			"$/*": ["src/*"]
 		}
 	},
 	"include": [

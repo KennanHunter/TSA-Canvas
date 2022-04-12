@@ -1,10 +1,28 @@
-@import "@fontsource/fira-mono";
+$text-color: #ffffff;
+$primary-color: #bb3e32;
+$secondary-color: #911414;
+$background-color: #1c1c1c;
 
-$primary-color: rgb(0, 0, 0);
+$font: "Open Sans";
 
 :root {
-	font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-	--font-mono: "Fira Mono", monospace;
-	color: $primary-color;
+	font-family: $font;
+
+	color: $text-color;
+}
+
+body,
+html {
+	margin: 0;
+	background-color: $background-color;
+}
+
+input {
+	box-shadow: none;
+	color: $text-color;
+	accent-color: $secondary-color;
+	background-color: transparent;
+	border-color: $secondary-color;
+	border-radius: 0.4em;
+	box-sizing: border-box;
 }

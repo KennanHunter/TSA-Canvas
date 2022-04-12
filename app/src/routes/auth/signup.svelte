@@ -6,7 +6,10 @@
 		mutation,
 		setAuthorizationHeader,
 	} from "$lib/query";
+	import { setTitle, Title } from "$lib/stores";
 	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
+
+	setTitle("Signup");
 
 	interface UserSignupData {
 		email?: string;
@@ -47,21 +50,42 @@
 <svelte:head>
 	<title>Signup</title>
 </svelte:head>
+<div id="outer">
+	<form>
+		<label for="email">Email: </label>
+		<input
+			type="text"
+			name="email"
+			id=""
+			bind:value={data.email}
+			required
+		/>
+		<label for="name">Name: </label>
+		<input type="text" name="name" id="" bind:value={data.name} required />
 
-<form>
-	<label for="email">Email: </label>
-	<input type="text" name="email" id="" bind:value={data.email} required />
-	<label for="name">Name: </label>
-	<input type="text" name="name" id="" bind:value={data.name} required />
-
-	<label for="password">Password: </label>
-	<input
-		type="password"
-		name="password"
-		bind:value={data.password}
-		id=""
-		required
-	/>
+		<label for="password">Password: </label>
+		<input
+			type="password"
+			name="password"
+			bind:value={data.password}
+			id=""
+			required
+		/>
+		<div id="remember">
+			<label for="remember">Remember Me:</label>
+			<input
+				type="checkbox"
+				name="remember"
+				bind:checked={data.remember}
+				id=""
+			/>
+		</div>
+		<input
+			type="submit"
+			value="Signup"
+			on:click|preventDefault={onSubmit}
+		/>
+	</form>
 	{#if zxcvbnResult}
 		<div class="strength">
 			<h2>Password Strength</h2>
@@ -72,7 +96,11 @@
 			{/each}
 		</div>
 	{/if}
-	<label for="remember">Remember Me:</label>
-	<input type="checkbox" name="remember" bind:checked={data.remember} id="" />
-	<input type="submit" value="Signup" on:click|preventDefault={onSubmit} />
-</form>
+</div>
+
+<style lang="scss">
+	@import "./forms.scss";
+	.strength {
+		grid-column-start: 3;
+	}
+</style>

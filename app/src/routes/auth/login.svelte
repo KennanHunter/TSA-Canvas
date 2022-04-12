@@ -6,12 +6,15 @@
 		mutation,
 		setAuthorizationHeader,
 	} from "$lib/query";
+	import { setTitle } from "$lib/stores";
 
 	interface UserRequestData {
 		email?: string;
 		password?: string;
 		remember?: boolean;
 	}
+
+	setTitle("Login");
 
 	let data: UserRequestData = {};
 
@@ -28,25 +31,26 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Login</title>
-</svelte:head>
+<div id="outer">
+	<form>
+		<label for="email">Email: </label>
+		<input type="text" id="email" bind:value={data.email} required />
+		<label for="password">Password: </label>
+		<input
+			type="password"
+			id="password"
+			bind:value={data.password}
+			required
+		/>
+		<div id="remember">
+			<input type="checkbox" id="remember" bind:checked={data.remember} />
+			<label for="remember">Remember Me:</label>
+		</div>
+		<input type="submit" value="Login" on:click|preventDefault={onSubmit} />
+		<a href="/auth/signup"
+			><input type="button" value="Sign Up Instead" /></a
+		>
+	</form>
+</div>
 
-<form>
-	<label for="email">Email: </label>
-	<input type="text" name="email" id="" bind:value={data.email} required />
-	<label for="password">Password: </label>
-	<input
-		type="password"
-		name="password"
-		bind:value={data.password}
-		id=""
-		required
-	/>
-	<label for="remember">Remember Me:</label>
-	<input type="checkbox" name="remember" bind:checked={data.remember} id="" />
-	<input type="submit" value="Login" on:click|preventDefault={onSubmit} />
-</form>
-
-<h1>{JSON.stringify(data)}</h1>
-<h1>{authorizationHeader}</h1>
+<style lang="scss" src="./forms.scss"></style>

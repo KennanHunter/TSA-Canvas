@@ -17,6 +17,7 @@ const config = {
 			resolve: {
 				alias: {
 					$zeus: resolve("./zeus"),
+					$: resolve("./src"),
 				},
 			},
 			server: {
