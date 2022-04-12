@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { query } from "$lib/query";
-
+	import { query } from "$lib/functions/query";
 	import { onMount } from "svelte";
 
 	let heartbeat: boolean = false;

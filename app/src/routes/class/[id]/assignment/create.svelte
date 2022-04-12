@@ -6,8 +6,7 @@
 	import { goto } from "$app/navigation";
 
 	import { page } from "$app/stores";
-
-	import { mutation } from "$lib/query";
+	import { mutation } from "$lib/functions/query";
 
 	let data = { name: "", description: "" };
 

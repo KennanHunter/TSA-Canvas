@@ -1,9 +1,8 @@
-import { browser, dev } from "$app/env";
-import { page } from "$app/stores";
+import { browser } from "$app/env";
 import { goto } from "$app/navigation";
-import { Thunder, Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
+import { page } from "$app/stores";
+import { Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
 import type { LoadOutput } from "@sveltejs/kit/types/internal";
-import { init } from "svelte/internal";
 
 interface GQLResponse extends GraphQLResponse {
 	errors?: Array<{
@@ -16,7 +15,7 @@ interface GQLResponse extends GraphQLResponse {
 
 export let authorizationHeader: string = undefined;
 
-export let host: string = "https://192.168.0.203";
+export let host: string = "https://tsa.kennan.tech";
 
 let inited = false;
 

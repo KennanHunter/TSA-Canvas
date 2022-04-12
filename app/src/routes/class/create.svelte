@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { mutation } from "$lib/query";
+	import { mutation } from "$lib/functions/query";
 	import { HsvPicker } from "svelte-color-picker";
 
 	let submissionData = { name: "", color: "" };

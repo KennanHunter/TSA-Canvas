@@ -5,7 +5,7 @@
 		authorizationHeader,
 		mutation,
 		setAuthorizationHeader,
-	} from "$lib/query";
+	} from "$lib/functions/query";
 	import { setTitle } from "$lib/stores";
 
 	interface UserRequestData {

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
-	import { host, mutation } from "./query";
+	import { mutation } from "$lib/functions/query";
 
 	let files: FileList;
 

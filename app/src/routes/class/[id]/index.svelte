@@ -1,4 +1,9 @@
 <script context="module" lang="ts">
+	import { query } from "$lib/functions/query";
+	import type { ValueTypes } from "$zeus/index";
+
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+
 	export async function load({
 		params,
 		fetch,
@@ -23,9 +28,7 @@
 
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { query } from "$lib/query";
-	import type { ValueTypes } from "$zeus/index";
-	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+
 	export let value: { Class: ValueTypes["Class"] };
 </script>
 

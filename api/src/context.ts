@@ -5,7 +5,7 @@ import { Client as MinioClient } from "minio";
 
 const prisma = new PrismaClient();
 const minio = new MinioClient({
-	endPoint: "192.168.0.203",
+	endPoint: "tsa.kennan.tech",
 	port: 9000,
 	useSSL: true,
 	accessKey: process.env.MINIO_ROOT_USER,

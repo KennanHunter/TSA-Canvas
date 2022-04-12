@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { queryInit } from "$lib/query";
+	import { queryInit } from "$lib/functions/query";
 	import Header from "$lib/header/Header.svelte";
 	import "../app.scss";
 	import { Title } from "$lib/stores";

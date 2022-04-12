@@ -1,9 +1,5 @@
-<script context="module" lang="ts">
-	export const prerender = true;
-</script>
-
 <script>
-	import { host } from "$lib/query";
+	import { host } from "$lib/functions/query";
 </script>
 
 <section>

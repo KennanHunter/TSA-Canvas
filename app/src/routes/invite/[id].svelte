@@ -26,8 +26,8 @@
 
 <script lang="ts">
 	import { page } from "$app/stores";
+	import { query, mutation } from "$lib/functions/query";
 
-	import { mutation, query } from "$lib/query";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 	import { onMount } from "svelte";
 

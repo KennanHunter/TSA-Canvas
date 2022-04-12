@@ -1,6 +1,6 @@
 <script>
-	import { query } from "$lib/query";
-	import Error from "$lib/Error.svelte";
+	import { query } from "$lib/functions/query";
+	import Error from "$lib/placeholders/Error.svelte";
 </script>
 
 <h1>Settings</h1>

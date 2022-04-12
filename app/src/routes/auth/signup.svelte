@@ -5,7 +5,7 @@
 		authorizationHeader,
 		mutation,
 		setAuthorizationHeader,
-	} from "$lib/query";
+	} from "$lib/functions/query";
 	import { setTitle, Title } from "$lib/stores";
 	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
 
@@ -86,7 +86,7 @@
 			on:click|preventDefault={onSubmit}
 		/>
 	</form>
-	{#if zxcvbnResult}
+	{#if zxcvbnResult && data.password}
 		<div class="strength">
 			<h2>Password Strength</h2>
 			{passwordFlavourText}
@@ -102,5 +102,6 @@
 	@import "./forms.scss";
 	.strength {
 		grid-column-start: 3;
+		margin-left: 1em;
 	}
 </style>

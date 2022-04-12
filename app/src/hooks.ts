@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation";
-import { authorizationHeader, fromCookie } from "$lib/query";
+import { authorizationHeader, fromCookie } from "$lib/functions/query";
 import type { ExternalFetch, Handle } from "@sveltejs/kit";
 import type {
 	LoadOutput,

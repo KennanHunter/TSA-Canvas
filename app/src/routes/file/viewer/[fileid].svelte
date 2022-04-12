@@ -1,4 +1,7 @@
 <script lang="ts" context="module">
+	import { page } from "$app/stores";
+	import Image from "$lib/components/Image.svelte";
+	import { query } from "$lib/functions/query";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
 	export async function load({
@@ -30,10 +33,6 @@
 </script>
 
 <script lang="ts">
-	import { page } from "$app/stores";
-	import { host, query, queryInit } from "$lib/query";
-	import Image from "$lib/Image.svelte";
-
 	export let owner = {
 		name: "",
 	};

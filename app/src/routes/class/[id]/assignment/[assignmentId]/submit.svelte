@@ -1,6 +1,4 @@
 <script context="module" lang="ts">
-	import { query } from "$lib/functions/query";
-
 	export async function load({
 		params,
 		fetch,
@@ -26,6 +24,7 @@
 </script>
 
 <script lang="ts">
+	import { query } from "$lib/functions/query";
 	import type { ValueTypes } from "$zeus/index";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 

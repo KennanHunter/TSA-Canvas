@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { host } from "./query";
-
+	import { host } from "$lib/functions/query";
 	export let id: string;
 </script>
 

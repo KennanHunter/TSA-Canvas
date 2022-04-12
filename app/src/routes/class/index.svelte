@@ -38,8 +38,8 @@
 </script>
 
 <script lang="ts">
-	import { query } from "$lib/query";
-	import type { LoadInput,LoadOutput } from "@sveltejs/kit/types/internal";
+	import { query } from "$lib/functions/query";
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
 	export let classes: { name: string; id: string }[] = [];
 </script>

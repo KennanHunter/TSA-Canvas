@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { query } from "$lib/query";
+	import { query } from "$lib/functions/query";
 	import type { ValueTypes } from "$zeus/index";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 	import { onMount } from "svelte";
