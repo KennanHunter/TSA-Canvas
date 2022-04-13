@@ -8,6 +8,7 @@
 	} from "$lib/functions/query";
 	import { setTitle, Title } from "$lib/stores";
 	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
+	import { fade } from "svelte/transition";
 
 	setTitle("Signup");
 
@@ -87,7 +88,7 @@
 		/>
 	</form>
 	{#if zxcvbnResult && data.password}
-		<div class="strength">
+		<div class="strength" transition:fade>
 			<h2>Password Strength</h2>
 			{passwordFlavourText}
 			<h3>{zxcvbnResult.feedback.warning}</h3>

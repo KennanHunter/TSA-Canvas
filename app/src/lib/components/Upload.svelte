@@ -1,11 +1,50 @@
+<script context="module" lang="ts">
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		return {
+			props: {
+				selectFiles: await query(
+					{
+						allFiles: {
+							id: true,
+						},
+					},
+					fetch,
+				),
+			},
+		};
+	}
+</script>
+
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { mutation } from "$lib/functions/query";
+	import { mutation, query } from "$lib/functions/query";
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+	import { destroy_component } from "svelte/internal";
 
-	let files: FileList;
+	let uploadFiles: FileList;
 
-	function upload() {
-		let link;
+	export let selectFiles = [];
+
+	export let returnFunction: (id: string) => void = (value) => {
+		console.log(value);
+	};
+
+	enum Position {
+		select,
+		upload,
+	}
+	let position: Position = Position.select;
+
+	if (!selectFiles) {
+		position = Position.upload;
+	}
+
+	function uploadNewFile() {
 		mutation({
 			uploadFile: {
 				link: true,
@@ -14,18 +53,48 @@
 				},
 			},
 		}).then((value) => {
-			link = value.uploadFile.link;
-			console.log(link);
-			fetch(link, { method: "PUT", body: files[0] }).then(() => {
-				goto("/file/viewer/" + value.uploadFile.file.id);
-			});
+			returnFunction(value.uploadFile.link);
 		});
+	}
+
+	function fileSelected(id: string) {
+		// Keeping this as external function for potential future validation of id
+		returnFunction(id);
 	}
 </script>
 
 <div>
-	<h1>Upload File</h1>
-	<input type="file" name="" id="" bind:files />
-	<br />
-	<input type="submit" value="Upload File" on:click={upload} />
+	<ul>
+		<li on:click={() => (position = Position.select)}>Use Existing File</li>
+		<li on:click={() => (position = Position.upload)}>Upload New File</li>
+	</ul>
+	{#if position === Position.upload}
+		<h1>Upload File</h1>
+		<input type="file" name="" id="" bind:files={uploadFiles} />
+		<br />
+		<input type="submit" value="Upload File" on:click={uploadNewFile} />
+	{:else if position === Position.select}
+		<h1>Select File</h1>
+		<ul>
+			{#each selectFiles as file}
+				<li
+					on:click={() => {
+						fileSelected(file.id);
+					}}
+				>
+					<p>{file.id}</p>
+				</li>
+			{/each}
+		</ul>
+	{/if}
 </div>
+
+<style lang="scss">
+	ul {
+		display: flexbox;
+		flex-direction: row;
+	}
+	li {
+		all: unset;
+	}
+</style>
