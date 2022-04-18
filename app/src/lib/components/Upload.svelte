@@ -4,6 +4,7 @@
 		fetch,
 		session,
 		stuff,
+		url,
 	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
 		return {
 			props: {
@@ -21,10 +22,8 @@
 </script>
 
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import { mutation, query } from "$lib/functions/query";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
-	import { destroy_component } from "svelte/internal";
 
 	let uploadFiles: FileList;
 
@@ -53,7 +52,12 @@
 				},
 			},
 		}).then((value) => {
-			returnFunction(value.uploadFile.link);
+			fetch(value.uploadFile.link, {
+				method: "PUT",
+				body: uploadFiles[0],
+			}).then(() => {
+				returnFunction(value.uploadFile.file.id);
+			});
 		});
 	}
 

@@ -23,7 +23,8 @@ export function queryInit(hostValue?: string) {
 	if (!inited) {
 		inited = true;
 		if (hostValue) {
-			host = hostValue;
+			host = "https://" + hostValue;
+			console.log(host);
 		} else {
 			page.subscribe((value) => {
 				host = value.url.origin;

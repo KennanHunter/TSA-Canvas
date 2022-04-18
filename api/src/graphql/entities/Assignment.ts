@@ -1,4 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server-errors";
+import e from "express";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 import { Class } from "./Class";
@@ -43,6 +44,20 @@ export const Assignment = objectType({
 				throw new AuthenticationError(
 					"Must be part of assignment to query",
 				);
+			},
+		});
+	},
+});
+
+export const AssignmentSubmission = objectType({
+	name: "AssignmentSubmission",
+	definition(t) {
+		t.nonNull.string("grade");
+		t.nonNull.int("submittedAt");
+		t.nonNull.field("assignment", {
+			type: "Assignment",
+			async resolve(parent, args, context: Context) {
+				console.log(parent);
 			},
 		});
 	},
@@ -138,6 +153,61 @@ export const AssignmentMutation = extendType({
 								teachers: true,
 							},
 						},
+					},
+				});
+			},
+		});
+	},
+});
+
+export const SubmissionQuery = extendType({
+	type: "Query",
+	definition(t) {
+		t.field("getSubmission", {
+			type: "AssignmentSubmission",
+			args: {
+				assignmentId: nonNull(stringArg()),
+			},
+			async resolve(parents, args, context: Context) {
+				return await context.prisma.assignmentSubmission.findFirst({
+					where: {
+						AND: [
+							{ assignmentId: args.assignmentId },
+							{ userId: context.userId },
+						],
+					},
+				});
+			},
+		});
+	},
+});
+
+export const SubmissionMutation = extendType({
+	type: "Mutation",
+	definition(t) {
+		t.field("submitAssignment", {
+			type: "AssignmentSubmission",
+			args: {
+				assignmentId: nonNull(stringArg()),
+				fileId: nonNull(stringArg()),
+			},
+			async resolve(parent, args, context: Context) {
+				return await context.prisma.assignmentSubmission.create({
+					data: {
+						file: {
+							connect: {
+								id: args.fileId,
+							},
+						},
+						assignment: {
+							connect: { id: args.assignmentId },
+						},
+						member: {
+							connect: {
+								id: context.userId,
+							},
+						},
+						submitted: true,
 					},
 				});
 			},

@@ -9,6 +9,7 @@
 	import { setTitle, Title } from "$lib/stores";
 	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
 	import { fade } from "svelte/transition";
+	import { tweened } from "svelte/motion";
 
 	setTitle("Signup");
 
@@ -22,6 +23,7 @@
 	let zxcvbnResult: ZXCVBNResult;
 	let passwordFlavourText: string;
 
+	let progressBar = tweened(0);
 	$: if (data.password) {
 		zxcvbnResult = zxcvbn(data.password);
 		passwordFlavourText = [
@@ -31,6 +33,7 @@
 			"Good",
 			"Very Good",
 		][zxcvbnResult.score];
+		progressBar.set(0.2 * (zxcvbnResult.score + 1));
 	}
 
 	let data: UserSignupData = {};
@@ -88,9 +91,10 @@
 		/>
 	</form>
 	{#if zxcvbnResult && data.password}
-		<div class="strength" transition:fade>
+		<div class="strength" in:fade>
 			<h2>Password Strength</h2>
-			{passwordFlavourText}
+			{passwordFlavourText}<br />
+			<progress value={$progressBar} />
 			<h3>{zxcvbnResult.feedback.warning}</h3>
 			{#each zxcvbnResult.feedback.suggestions as suggestion}
 				<h3>Maybe {suggestion.toLowerCase()}</h3>

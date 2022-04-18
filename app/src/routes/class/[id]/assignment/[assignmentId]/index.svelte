@@ -34,3 +34,7 @@
 
 <h1>{assignment.name}</h1>
 <p>{assignment.description}</p>
+
+<a href="submission/">
+	<button> View Submission </button>
+</a>
