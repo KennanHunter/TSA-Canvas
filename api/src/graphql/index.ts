@@ -9,3 +9,5 @@ export * from "./entities/File";
 
 export * from "./auth";
 export * from "./heartbeat";
+
+export * from "./util/guestSignup";

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Title } from "$lib/stores";
+	export let Name = "";
 </script>
 
 <svelte:head>
@@ -7,16 +8,32 @@
 </svelte:head>
 
 <template>
-	<h1>{$Title}</h1>
+	<div>
+		<h1 class="title">{$Title}</h1>
+		<h1 class="name">{Name}</h1>
+	</div>
 	<hr />
 </template>
 
 <style lang="scss">
 	@use "../../app.scss";
 
+	div {
+		display: flex;
+		justify-content: space-between;
+		padding: 0 1em;
+	}
 	h1 {
-		padding-left: 1em;
 		margin: 0.5em;
+	}
+	.title {
+		text-align: left;
+		font-size: 2em;
+	}
+	.name {
+		text-align: right;
+		font-size: 1.5em;
+		align-self: center;
 	}
 
 	hr {

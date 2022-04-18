@@ -3,29 +3,50 @@ lang="ts"
 context="module"
 >
 	export async function load({
-		url,
+url
+,
+		fetch,
 	}: LoadInput){
 		queryInit(url.host)
-		return {}
+		let selfQuery = await query(
+					{
+						self: {
+							name: true
+						}	
+					},fetch, false);
+
+					if (selfQuery) {
+		return {
+			props: {
+				Name :
+				selfQuery.self.name
+			}
+		}
+	} else {
+		// if (url.href != "/auth/login" && browser) {
+		// 	goto("/auth/login")
+		// }
+		return {
+		}
+	}
 	}
 
 </script>
 
 <script lang="ts">
-	import { queryInit } from "$lib/functions/query";
+	import { query,queryInit } from "$lib/functions/query";
 	import Header from "$lib/header/Header.svelte";
-	import "../app.scss";
 	import { Title } from "$lib/stores";
-import type { LoadInput } from "@sveltejs/kit/types/private";
+	import type { LoadInput } from "@sveltejs/kit/types/private";
+	import "../app.scss";
 
-	queryInit();
-
+	export let Name = "";
 	if (!$Title) {
 		Title.set("Red Panda LMS");
 	}
 </script>
 
-<Header />
+<Header {Name} />
 
 <main>
 	<slot />

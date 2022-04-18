@@ -16,7 +16,7 @@ model User {
   id       String   @id @default(cuid())
   name     String
   pronouns String?
-  email    String   @unique
+  email    String?  @unique
   password String?
   isGuest  Boolean
   joinedAt DateTime @default(now())

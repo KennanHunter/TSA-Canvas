@@ -7,7 +7,8 @@ export const Class = objectType({
 	definition(t) {
 		t.nonNull.string("id");
 		t.nonNull.string("name");
-		// t.nonNull.color("color");
+		t.string("color");
+
 		t.nonNull.list.field("members", {
 			type: "User",
 			async resolve(parent, args, context: Context) {
@@ -58,6 +59,12 @@ export const Class = objectType({
 					.assignments();
 			},
 		});
+		t.nonNull.boolean("hasPerms", {
+			async resolve(parent, args, context: Context) {
+				console.log("parent id: " + parent.owner.id);
+				return context.userId === parent.owner.id;
+			},
+		});
 	},
 });
 
@@ -70,6 +77,7 @@ export const ClassQuery = extendType({
 				classId: nonNull(stringArg()),
 			},
 			async resolve(parent, args, context: Context) {
+				let allowed = false;
 				const query = await context.prisma.class.findUnique({
 					where: {
 						id: args.classId,
@@ -80,24 +88,30 @@ export const ClassQuery = extendType({
 						teachers: true,
 					},
 				});
-
 				if (query.owner.id === context.userId) {
-					return query;
+					allowed = true;
+					return query; // Minor Optimization
 				}
 
 				query.members.forEach((user) => {
 					if (user.id === context.userId) {
-						return query;
+						allowed = true;
 					}
 				});
 
 				query.teachers.forEach((user) => {
 					if (user.id === context.userId) {
-						return query;
+						allowed = true;
 					}
 				});
 
-				throw new AuthenticationError("Must be part of class to query");
+				if (allowed) {
+					return query;
+				} else {
+					throw new AuthenticationError(
+						"Must be part of class to query",
+					);
+				}
 			},
 		});
 	},

@@ -10,6 +10,7 @@
 	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
 	import { fade } from "svelte/transition";
 	import { tweened } from "svelte/motion";
+	import { signupAsGuest } from "$lib/functions/signupAsGuest";
 
 	setTitle("Signup");
 
@@ -21,9 +22,10 @@
 	}
 
 	let zxcvbnResult: ZXCVBNResult;
-	let passwordFlavourText: string;
+	let passwordFlavourText: string = "";
 
 	let progressBar = tweened(0);
+
 	$: if (data.password) {
 		zxcvbnResult = zxcvbn(data.password);
 		passwordFlavourText = [
@@ -89,24 +91,40 @@
 			value="Signup"
 			on:click|preventDefault={onSubmit}
 		/>
+		<input
+			type="submit"
+			value="Signup As Guest"
+			on:click|preventDefault={signupAsGuest}
+		/>
 	</form>
-	{#if zxcvbnResult && data.password}
-		<div class="strength" in:fade>
-			<h2>Password Strength</h2>
-			{passwordFlavourText}<br />
-			<progress value={$progressBar} />
-			<h3>{zxcvbnResult.feedback.warning}</h3>
+
+	<div class="strength" in:fade>
+		<h2>Password Strength</h2>
+		<label for="progress">{passwordFlavourText}</label> <br />
+		<progress id="progress" value={$progressBar} />
+		{#if zxcvbnResult && data.password}
+			<h3 transition:fade>{zxcvbnResult.feedback.warning}</h3>
 			{#each zxcvbnResult.feedback.suggestions as suggestion}
-				<h3>Maybe {suggestion.toLowerCase()}</h3>
+				<h3 transition:fade>{suggestion}</h3>
 			{/each}
-		</div>
-	{/if}
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
 	@import "./forms.scss";
+	@import "../../app.scss";
 	.strength {
 		grid-column-start: 3;
 		margin-left: 1em;
+	}
+	progress {
+		width: 15rem;
+	}
+	::-webkit-progress-bar {
+		background-color: $secondary-color;
+	}
+	::-moz-progress-bar {
+		background-color: $secondary-color;
 	}
 </style>

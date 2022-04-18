@@ -4,7 +4,7 @@ import { page } from "$app/stores";
 import { Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
 import type { LoadOutput } from "@sveltejs/kit/types/internal";
 
-interface GQLResponse extends GraphQLResponse {
+export interface GQLResponse extends GraphQLResponse {
 	errors?: Array<{
 		message: string;
 		extensions: {
@@ -38,6 +38,10 @@ export function setAuthorizationHeader(data: string, remember: boolean) {
 	if (remember) {
 		document.cookie = "authentication=" + authorizationHeader;
 		setAuthStorage(authorizationHeader);
+	} else {
+		document.cookie = "authentication=" + "";
+
+		setAuthStorage("");
 	}
 }
 
@@ -59,7 +63,11 @@ function setAuthStorage(token: string) {
 	localStorage.setItem("token", token);
 }
 
-async function postEndpoint(query: string, fetchFunction: typeof fetch) {
+async function postEndpoint(
+	query: string,
+	fetchFunction: typeof fetch,
+	redirectOnFail: boolean = true,
+) {
 	if (browser) {
 		// queryInit();
 		if (!authorizationHeader) {
@@ -83,7 +91,9 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 		switch (jason.errors[0].extensions.code) {
 			case "UNAUTHENTICATED":
 				if (browser) {
-					goto("/auth/login");
+					if (redirectOnFail) {
+						goto("/auth/login");
+					}
 				} else {
 					throw new Error("UNAUTHENTICATED");
 				}
@@ -98,15 +108,25 @@ async function postEndpoint(query: string, fetchFunction: typeof fetch) {
 export function query(
 	query: ValueTypes["Query"],
 	fetchFunction?: typeof fetch,
+	redirectOnFail?: boolean,
 ) {
-	return postEndpoint(Zeus("query", query), fetchFunction || fetch);
+	return postEndpoint(
+		Zeus("query", query),
+		fetchFunction || fetch,
+		redirectOnFail,
+	);
 }
 
 export function mutation(
 	query: ValueTypes["Mutation"],
 	fetchFunction?: typeof fetch,
+	redirectOnFail?: boolean,
 ) {
-	return postEndpoint(Zeus("mutation", query), fetchFunction || fetch);
+	return postEndpoint(
+		Zeus("mutation", query),
+		fetchFunction || fetch,
+		redirectOnFail,
+	);
 }
 
 function authRedirect(): LoadOutput<Record<string, any>> {

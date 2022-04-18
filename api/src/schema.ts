@@ -13,3 +13,5 @@ export const schema = makeSchema({
 		export: "Context",
 	},
 });
+
+console.log("GraphQL Schema Generated");

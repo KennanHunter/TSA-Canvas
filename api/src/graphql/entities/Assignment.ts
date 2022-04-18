@@ -1,5 +1,4 @@
 import { ApolloError, AuthenticationError } from "apollo-server-errors";
-import e from "express";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 import { Class } from "./Class";
@@ -12,10 +11,13 @@ export const Assignment = objectType({
 		t.nonNull.string("description");
 		t.nonNull.string("color");
 		t.nonNull.int("maxGrade");
+		t.int("dueAt");
 		t.nonNull.field("class", {
 			type: Class,
 			async resolve(parent, args, context: Context) {
-				let value = await context.prisma.assignment.findUnique({
+				let allowed = false;
+
+				let query = await context.prisma.assignment.findUnique({
 					where: {
 						id: parent.id,
 					},
@@ -28,22 +30,30 @@ export const Assignment = objectType({
 						},
 					},
 				});
-				value.Class.members.forEach((member) => {
-					if (context.userId === member.id) {
-						return value.Class;
-					}
-				});
-				value.Class.teachers.forEach((member) => {
-					if (context.userId === member.id) {
-						return value.Class;
-					}
-				});
-				if (context.userId === value.Class.ownerId) {
-					return value.Class;
+				if (query.Class.ownerId === context.userId) {
+					allowed = true;
+					return query.Class; // Minor Optimization
 				}
-				throw new AuthenticationError(
-					"Must be part of assignment to query",
-				);
+
+				query.Class.members.forEach((user) => {
+					if (user.id === context.userId) {
+						allowed = true;
+					}
+				});
+
+				query.Class.teachers.forEach((user) => {
+					if (user.id === context.userId) {
+						allowed = true;
+					}
+				});
+
+				if (allowed) {
+					return query.Class;
+				} else {
+					throw new AuthenticationError(
+						"Must be part of Assignment to query",
+					);
+				}
 			},
 		});
 	},
@@ -77,6 +87,7 @@ export const AssignmentQuery = extendType({
 				args: { classId: string; assignmentId: string },
 				context: Context,
 			) {
+				let allowed = false;
 				let query = await context.prisma.assignment
 					.findUnique({
 						where: {
@@ -97,22 +108,30 @@ export const AssignmentQuery = extendType({
 					});
 
 				if (query.Class.owner.id === context.userId) {
+					allowed = true;
+
 					return query;
 				}
 
 				query.Class.members.forEach((user) => {
 					if (user.id === context.userId) {
-						return query;
+						allowed = true;
 					}
 				});
 
 				query.Class.teachers.forEach((user) => {
 					if (user.id === context.userId) {
-						return query;
+						allowed = true;
 					}
 				});
 
-				throw new AuthenticationError("Must be part of class to query");
+				if (allowed) {
+					return query;
+				} else {
+					throw new AuthenticationError(
+						"Must be part of class to query",
+					);
+				}
 			},
 		});
 	},

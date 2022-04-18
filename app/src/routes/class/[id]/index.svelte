@@ -16,7 +16,11 @@
 					{
 						Class: [
 							{ classId: params.id },
-							{ name: true, owner: { name: true } },
+							{
+								name: true,
+								owner: { name: true },
+								hasPerms: true,
+							},
 						],
 					},
 					fetch,
@@ -35,6 +39,8 @@
 <h1>{value.Class.name}</h1>
 <h3><em>Owned by</em> {value.Class.owner.name}</h3>
 
-<a href={$page.url.href + "assignment/create"}
-	><button>Create assignment</button></a
->
+{#if value.Class.hasPerms}
+	<a href={$page.url.href + "assignment/create"}
+		><button>Create assignment</button></a
+	>
+{/if}

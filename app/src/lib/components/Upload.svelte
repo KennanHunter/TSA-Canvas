@@ -67,10 +67,20 @@
 	}
 </script>
 
-<div>
+<div class="upload-container">
 	<ul>
-		<li on:click={() => (position = Position.select)}>Use Existing File</li>
-		<li on:click={() => (position = Position.upload)}>Upload New File</li>
+		<li
+			on:click={() => (position = Position.select)}
+			class={position === Position.select ? "active" : ""}
+		>
+			Use Existing File
+		</li>
+		<li
+			on:click={() => (position = Position.upload)}
+			class={position === Position.upload ? "active" : ""}
+		>
+			Upload New File
+		</li>
 	</ul>
 	{#if position === Position.upload}
 		<h1>Upload File</h1>
@@ -94,6 +104,16 @@
 </div>
 
 <style lang="scss">
+	.upload-container {
+		background-color: grey;
+		margin: 1rem;
+	}
+	.active {
+		background-color: aqua;
+	}
+	ul {
+		border: 2px solid black;
+	}
 	ul {
 		display: flexbox;
 		flex-direction: row;

@@ -2,6 +2,8 @@ import { objectType } from "nexus";
 import * as jwt from "jsonwebtoken";
 import { AuthenticationError } from "apollo-server-errors";
 
+export const hashIterations = 10;
+
 export const AuthPayload = objectType({
 	name: "AuthPayload",
 	definition(t) {

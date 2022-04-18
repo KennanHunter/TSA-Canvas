@@ -2,7 +2,7 @@ import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import { AuthTokenPayload } from "../auth";
+import { AuthTokenPayload, hashIterations } from "../auth";
 import { AuthenticationError } from "apollo-server";
 import { prisma, User as Userobject } from "@prisma/client";
 
@@ -117,7 +117,10 @@ export const UserMutation = extendType({
 			async resolve(parent, args, context: Context) {
 				const { email, name } = args;
 
-				const password = await bcrypt.hash(args.password, 10);
+				const password = await bcrypt.hash(
+					args.password,
+					hashIterations,
+				);
 
 				const user = await context.prisma.user.create({
 					data: {
