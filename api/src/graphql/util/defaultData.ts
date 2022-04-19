@@ -37,8 +37,10 @@ export function populate() {
 				},
 			},
 		});
+		guestClassId = guestClass.id;
 
 		console.log("Population Successful");
+		console.log("Guest Class Id is: " + guestClassId);
 	})().catch(() => {
 		prisma.class
 			.findFirst({
