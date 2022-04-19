@@ -4,7 +4,7 @@
 </script>
 
 <div class="outer">
-	<menu>
+	<menu class="hiddenWhenSmall">
 		<ul>
 			<a href={baseUrl}>
 				<li>Class Page</li>

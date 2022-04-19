@@ -9,8 +9,8 @@
 
 <template>
 	<div>
-		<h1 class="title">{$Title}</h1>
-		<h1 class="name">{Name}</h1>
+		<h1 class="title hiddenWhenSmall">{$Title}</h1>
+		<h1 class="name hiddenWhenSmall">{Name}</h1>
 	</div>
 	<hr />
 </template>

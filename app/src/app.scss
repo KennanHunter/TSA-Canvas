@@ -17,7 +17,8 @@ html {
 	background-color: $background-color;
 }
 
-input {
+input,
+button {
 	box-shadow: none;
 	color: $text-color;
 	accent-color: $secondary-color;
@@ -29,4 +30,10 @@ input {
 
 a {
 	all: unset;
+}
+
+@media only screen and (max-width: 600px) {
+	.hiddenWhenSmall {
+		display: none;
+	}
 }

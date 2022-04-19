@@ -44,16 +44,52 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 
-	export let assignments: ValueTypes["Assignment"][];
+	export let assignments;
 </script>
 
-{#each assignments as assignment}
-	<div>
+<section>
+	{#each assignments as assignment}
 		<a href={$page.url.href + assignment.id}>
-			<h2>
-				{assignment.name}
-			</h2>
+			<div class="outer">
+				<h2>
+					{assignment.name}
+				</h2>
+				<div class="bar">
+					<p>{assignment.class.owner.name}</p>
+					{#if assignment.dueAt}
+						<p>
+							<em>Due At</em>
+							{new Date(assignment.dueAt).toDateString()}
+						</p>
+					{/if}
+				</div>
+			</div>
 		</a>
-		<p>{assignment.class.owner.name}</p>
-	</div>
-{/each}
+	{/each}
+</section>
+
+<style lang="scss">
+	@import "../../../../app.scss";
+	section {
+		display: flex;
+	}
+	.outer {
+		border: 0.2em solid $secondary-color;
+		border-radius: 0.4em;
+		padding: 1em;
+		margin: 1em;
+	}
+	.outer:hover {
+		h2 {
+			font-weight: 900;
+		}
+		p {
+			font-weight: 700;
+		}
+		border: 0.4em solid $secondary-color;
+	}
+	.bar {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>
