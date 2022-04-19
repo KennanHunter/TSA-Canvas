@@ -49,6 +49,7 @@
 <script lang="ts">
 	import Card from "$lib/components/Card.svelte";
 	import { query } from "$lib/functions/query";
+	import { setTitle } from "$lib/stores";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
 	export let classes: {
@@ -56,11 +57,8 @@
 		id: string;
 		owner: { name: string };
 	}[] = [];
+	setTitle("Class Dashboard");
 </script>
-
-<svelte:head>
-	<title>Class Dashboard</title>
-</svelte:head>
 
 <aside>
 	<a href="/class/create/"><button> Create Class </button> </a>

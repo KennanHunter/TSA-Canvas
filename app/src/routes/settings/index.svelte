@@ -1,6 +1,9 @@
 <script>
 	import { query } from "$lib/functions/query";
 	import Error from "$lib/placeholders/Error.svelte";
+	import { setTitle } from "$lib/stores";
+
+	setTitle("Settings");
 </script>
 
 <h1>Settings</h1>

@@ -1,40 +1,30 @@
-<script
-lang="ts"
-context="module"
->
-	export async function load({
-url
-,
-		fetch,
-	}: LoadInput){
-		queryInit(url.host)
+<script lang="ts" context="module">
+	export async function load({ url, fetch }: LoadInput) {
+		queryInit(url.host);
 		let selfQuery = await query(
-					{
-						self: {
-							name: true
-						}	
-					},fetch, false);
+			{
+				self: {
+					name: true,
+				},
+			},
+			fetch,
+			false,
+		);
 
-					if (selfQuery) {
-		return {
-			props: {
-				Name :
-				selfQuery.self.name
-			}
-		}
-	} else {
-		// if (url.href != "/auth/login" && browser) {
-		// 	goto("/auth/login")
-		// }
-		return {
+		if (selfQuery.self.name) {
+			return {
+				props: {
+					Name: selfQuery.self.name,
+				},
+			};
+		} else {
+			return {};
 		}
 	}
-	}
-
 </script>
 
 <script lang="ts">
-	import { query,queryInit } from "$lib/functions/query";
+	import { query, queryInit } from "$lib/functions/query";
 	import Header from "$lib/header/Header.svelte";
 	import { Title } from "$lib/stores";
 	import type { LoadInput } from "@sveltejs/kit/types/private";
@@ -53,11 +43,9 @@ url
 </main>
 
 <style>
-
-@media only screen and (max-width: 600px) {
-
-	main {
-		margin: 0 1em ;
+	@media only screen and (max-width: 600px) {
+		main {
+			margin: 0 1em;
+		}
 	}
-}
 </style>

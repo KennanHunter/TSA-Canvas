@@ -18,6 +18,7 @@
 							Class: [
 								{ classId: params.id },
 								{
+									name: true,
 									hasPerms: true,
 								},
 							],
@@ -32,8 +33,10 @@
 
 <script>
 	import { page } from "$app/stores";
+	import { setTitle } from "$lib/stores";
 	let baseUrl = "/class/" + $page.params.id + "/";
 	export let value;
+	setTitle(value.name);
 </script>
 
 <div class="outer">

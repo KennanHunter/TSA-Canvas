@@ -1,5 +1,8 @@
 <script>
 	import { host } from "$lib/functions/query";
+	import { setTitle } from "$lib/stores";
+
+	setTitle("");
 </script>
 
 <section>
