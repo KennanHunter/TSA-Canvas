@@ -11,7 +11,7 @@
 			false,
 		);
 
-		if (selfQuery.self.name) {
+		if (selfQuery?.self?.name) {
 			return {
 				props: {
 					Name: selfQuery.self.name,
