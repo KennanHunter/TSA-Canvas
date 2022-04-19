@@ -53,4 +53,11 @@ url
 </main>
 
 <style>
+
+@media only screen and (max-width: 600px) {
+
+	main {
+		margin: 0 1em ;
+	}
+}
 </style>
