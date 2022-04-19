@@ -27,12 +27,16 @@
 </script>
 
 <script lang="ts">
+	import SvelteMarkdown from "svelte-markdown";
+
 	export let assignment;
 </script>
 
 <h1>{assignment.name}</h1>
 <h2>Due At {new Date(assignment.dueAt).toDateString()}</h2>
-<p>{assignment.description}</p>
+<div class="description">
+	<SvelteMarkdown source={assignment.description} />
+</div>
 
 <a href="submission/">
 	<button> View Submission </button>
