@@ -1,0 +1,31 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Red Panda LMS",
+	"short_name": "Red Panda LMS",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#1c1c1c",
+	"theme_color": "#bb3e32",
+	"description": "A learning management system built for the modern web",
+	"icons": [
+		{
+			"src": "Logo.svg",
+			"type": "image/svg+xml"
+		},
+		{
+			"src": "Logo-120.png",
+			"sizes": "120x120",
+			"type": "image/png"
+		},
+		{
+			"src": "Logo-192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "Logo-512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}
