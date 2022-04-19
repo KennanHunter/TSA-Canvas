@@ -29,6 +29,7 @@
 	import { Title } from "$lib/stores";
 	import type { LoadInput } from "@sveltejs/kit/types/private";
 	import "../app.scss";
+	import "bytemd/dist/index.css";
 
 	export let Name = "";
 	if (!$Title) {

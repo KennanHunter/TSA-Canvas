@@ -7,7 +7,9 @@
 
 	import { page } from "$app/stores";
 	import { mutation } from "$lib/functions/query";
+	import { plugins } from "$lib/markdownPlugins";
 
+	import { Editor } from "bytemd";
 	let data = { name: "", description: "" };
 
 	function Submit() {
@@ -30,6 +32,10 @@
 			);
 		});
 	}
+
+	function handleMarkdownChange(event) {
+		data.description = event.detail.value;
+	}
 </script>
 
 <h1>Create</h1>
@@ -38,6 +44,10 @@
 	<label for="name">Name: </label>
 	<input type="text" name="name" bind:value={data.name} />
 	<label for="description">Description: </label>
-	<input type="text" name="description" bind:value={data.description} />
-	<button type="submit" on:click|preventDefault={Submit}> Create </button>
+	<Editor
+		value={data.description}
+		{plugins}
+		on:change={handleMarkdownChange}
+	/>
+	<button type="sub3mit" on:click|preventDefault={Submit}> Create </button>
 </form>

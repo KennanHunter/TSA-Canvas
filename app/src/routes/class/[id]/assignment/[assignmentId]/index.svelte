@@ -1,6 +1,8 @@
 <script context="module" lang="ts">
 	import { query } from "$lib/functions/query";
+	import { plugins } from "$lib/markdownPlugins";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+	import { Viewer } from "bytemd";
 
 	export async function load({
 		params,
@@ -27,15 +29,17 @@
 </script>
 
 <script lang="ts">
-	import SvelteMarkdown from "svelte-markdown";
-
 	export let assignment;
 </script>
 
 <h1>{assignment.name}</h1>
-<h2>Due At {new Date(assignment.dueAt).toDateString()}</h2>
+{#if assignment.dueAt}
+	<h2>Due At {new Date(assignment.dueAt).toDateString()}</h2>
+{:else}
+	<h2>No Specified Due Date</h2>
+{/if}
 <div class="description">
-	<SvelteMarkdown source={assignment.description} />
+	<Viewer value={assignment.description} {plugins} />
 </div>
 
 <a href="submission/">

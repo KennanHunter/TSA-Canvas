@@ -37,11 +37,15 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@bytemd/plugin-gfm": "^1.13.1",
+		"@bytemd/plugin-highlight": "^1.13.1",
+		"@bytemd/plugin-math": "^1.13.1",
+		"@bytemd/plugin-mermaid": "^1.13.1",
 		"@fontsource/fira-mono": "^4.5.0",
 		"@lukeed/uuid": "^2.0.0",
+		"bytemd": "^1.13.1",
 		"cookie": "^0.4.1",
 		"svelte-color-picker": "^1.0.7",
-		"svelte-markdown": "^0.2.2",
 		"zxcvbn": "^4.4.2"
 	}
 }
