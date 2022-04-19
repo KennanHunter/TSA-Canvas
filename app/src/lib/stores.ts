@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 export let Title = writable("");
 
-export function setTitle(value: string) {
+export function setTitle(value?: string) {
 	if (value) {
 		Title.set(value);
 	} else {
