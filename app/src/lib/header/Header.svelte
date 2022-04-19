@@ -10,10 +10,10 @@
 
 <template>
 	<div class="bar">
-		<div class="left">
+		<a class="left" href="/">
 			<img src={Logo} alt="Logo" class="hiddenWhenSmall" />
 			<h1 class="title hiddenWhenSmall">{$Title}</h1>
-		</div>
+		</a>
 		<h1 class="name hiddenWhenSmall">{Name}</h1>
 	</div>
 	<hr />
@@ -39,6 +39,11 @@
 		margin: 0.5em;
 		display: flex;
 		align-items: center;
+	}
+	.left:hover {
+		h1 {
+			color: app.$primary-color;
+		}
 	}
 	.title {
 		text-align: left;

@@ -25,6 +25,8 @@
 </script>
 
 <script lang="ts">
+	import { goto } from "$app/navigation";
+
 	import { page } from "$app/stores";
 	import { query, mutation } from "$lib/functions/query";
 
@@ -45,8 +47,10 @@
 				{
 					inviteId: $page.params.id,
 				},
-				{},
+				{ id: true },
 			],
+		}).then(({ acceptInvite }) => {
+			goto("/class/" + acceptInvite.id);
 		});
 	}
 </script>

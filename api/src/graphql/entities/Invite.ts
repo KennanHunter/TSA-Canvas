@@ -52,15 +52,15 @@ export const genInvite = extendType({
 			},
 			async resolve(parent, args, context: Context) {
 				if (context.userId) {
-					let invite = context.prisma.classInvites.findUnique({
+					let invite = await context.prisma.classInvites.findUnique({
 						where: {
 							id: args.inviteId,
 						},
 					});
 
-					return context.prisma.class.update({
+					return await context.prisma.class.update({
 						where: {
-							id: (await invite).id,
+							id: invite.classId,
 						},
 						data: {
 							members: {

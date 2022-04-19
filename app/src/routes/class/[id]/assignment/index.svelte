@@ -13,29 +13,36 @@
 		return {
 			props: {
 				assignments: (
-					await query(
-						{
-							Class: [
-								{
-									classId: params.id,
-								},
-								{
-									id: true,
-									assignments: {
+					(
+						await query(
+							{
+								Class: [
+									{
+										classId: params.id,
+									},
+									{
 										id: true,
-										name: true,
-										class: {
-											owner: {
-												name: true,
+										assignments: {
+											id: true,
+											name: true,
+											dueAt: true,
+											class: {
+												owner: {
+													name: true,
+												},
 											},
 										},
 									},
-								},
-							],
-						},
-						fetch,
-					)
-				).Class.assignments,
+								],
+							},
+							fetch,
+						)
+					).Class.assignments as {
+						id: number;
+						name: string;
+						dueAt: number;
+					}[]
+				).sort((a, b) => a.dueAt - b.dueAt),
 			},
 		};
 	}
@@ -57,7 +64,7 @@
 				value={{
 					Title: assignment.name,
 					PrimarySubtext: assignment.class.owner.name,
-					SecondarySubtext: assignment.dueAt,
+					SecondarySubtext: new Date(assignment.dueAt).toDateString(),
 				}}
 			/>
 		</a>
@@ -68,5 +75,6 @@
 	@import "../../../../app.scss";
 	div {
 		display: flex;
+		flex-wrap: wrap;
 	}
 </style>

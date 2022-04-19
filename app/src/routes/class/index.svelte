@@ -86,6 +86,7 @@
 <style>
 	section {
 		display: flex;
+		flex-wrap: wrap;
 	}
 	button {
 		margin: 1em;

@@ -1,6 +1,39 @@
+<script context="module" lang="ts">
+	import { query } from "$lib/functions/query";
+	import type { ValueTypes } from "$zeus/index";
+
+	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
+
+	export async function load({
+		params,
+		fetch,
+		session,
+		stuff,
+	}: LoadInput): Promise<LoadOutput<Record<string, any>>> {
+		return {
+			props: {
+				value: (
+					await query(
+						{
+							Class: [
+								{ classId: params.id },
+								{
+									hasPerms: true,
+								},
+							],
+						},
+						fetch,
+					)
+				).Class,
+			},
+		};
+	}
+</script>
+
 <script>
 	import { page } from "$app/stores";
 	let baseUrl = "/class/" + $page.params.id + "/";
+	export let value;
 </script>
 
 <div class="outer">
@@ -9,16 +42,22 @@
 			<a href={baseUrl}>
 				<li>Class Page</li>
 			</a>
+			<a href={baseUrl + "assignment"}><li>Assignments</li></a>
+
 			<a href={baseUrl + "grades"}>
 				<li>Grades</li>
 			</a>
 			<a href={baseUrl + "memberlist"}>
 				<li>Class Members</li>
 			</a>
-			{#if false}
-				<li>Class Settings</li>
+			{#if value.hasPerms}
+				<a href={baseUrl + "settings"}>
+					<li>Class Settings</li>
+				</a>
+				<a href={baseUrl + "invite"}>
+					<li>Invites</li>
+				</a>
 			{/if}
-			<a href={baseUrl + "assignment"}><li>Assignments</li></a>
 		</ul>
 	</menu>
 	<div>
