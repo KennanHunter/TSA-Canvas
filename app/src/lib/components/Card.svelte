@@ -39,6 +39,7 @@
 		border-radius: 0.4em;
 		padding: 1em;
 		margin: 1em;
+		width: 20em;
 	}
 	.outer:hover {
 		h2 {

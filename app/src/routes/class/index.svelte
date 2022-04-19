@@ -88,7 +88,6 @@
 		display: flex;
 	}
 	button {
-		padding: 1em;
-		font-size: 1em;
+		margin: 1em;
 	}
 </style>

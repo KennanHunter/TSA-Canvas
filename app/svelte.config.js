@@ -17,12 +17,13 @@ const config = {
 			resolve: {
 				alias: {
 					$zeus: resolve("./zeus"),
+					$static: resolve("./static"),
 					$: resolve("./src"),
 				},
 			},
 			server: {
 				fs: {
-					allow: ["./zeus"],
+					allow: ["./zeus", "./static"],
 				},
 				// proxy: {
 				// 	"api": {

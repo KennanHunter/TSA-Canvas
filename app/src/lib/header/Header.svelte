@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Title } from "$lib/stores";
 	export let Name = "";
+	import Logo from "$static/Logo.png";
 </script>
 
 <svelte:head>
@@ -8,8 +9,11 @@
 </svelte:head>
 
 <template>
-	<div>
-		<h1 class="title hiddenWhenSmall">{$Title}</h1>
+	<div class="bar">
+		<div class="left">
+			<img src={Logo} alt="Logo" class="hiddenWhenSmall" />
+			<h1 class="title hiddenWhenSmall">{$Title}</h1>
+		</div>
 		<h1 class="name hiddenWhenSmall">{Name}</h1>
 	</div>
 	<hr />
@@ -18,13 +22,23 @@
 <style lang="scss">
 	@use "../../app.scss";
 
-	div {
+	img {
+		height: 5em;
+		margin: 0.5em;
+	}
+	.bar {
 		display: flex;
 		justify-content: space-between;
-		padding: 0 1em;
+		padding: 0 0.5em;
 	}
 	h1 {
+		display: inline;
+		vertical-align: middle;
+	}
+	.left {
 		margin: 0.5em;
+		display: flex;
+		align-items: center;
 	}
 	.title {
 		text-align: left;

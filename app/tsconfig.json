@@ -33,6 +33,8 @@
 			"$lib/*": ["src/lib/*"],
 			"$zeus": ["zeus/"],
 			"$zeus/*": ["zeus/*"],
+			"$static": ["static"],
+			"$static/*": ["static/*"],
 			"$": ["src"],
 			"$/*": ["src/*"]
 		}

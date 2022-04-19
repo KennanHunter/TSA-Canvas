@@ -23,15 +23,43 @@
 
 <h1>Create class</h1>
 
-<form>
-	<label for="name">Class Name:</label>
-	<input type="text" name="name" id="" bind:value={submissionData.name} />
-	<HsvPicker
-		startColor={possibleRandomColors[
-			Math.round(Math.random() * possibleRandomColors.length)
-		]}
-	/>
-	<button type="submit" on:click|preventDefault={submit}>
-		Create Class</button
-	>
-</form>
+<section>
+	<form>
+		<label for="name">Class Name:</label> <br />
+		<input type="text" name="name" id="" bind:value={submissionData.name} />
+		<div>
+			<HsvPicker
+				startColor={possibleRandomColors[
+					Math.round(Math.random() * possibleRandomColors.length)
+				]}
+			/>
+		</div>
+		<button type="submit" on:click|preventDefault={submit}>
+			Create Class</button
+		>
+	</form>
+</section>
+
+<style lang="scss">
+	section {
+		display: grid;
+		grid-template-columns: auto auto auto;
+	}
+	input {
+		font-size: 1em;
+		padding: 0.2em;
+		width: 20em;
+	}
+	button {
+		width: 20em;
+	}
+	div {
+		align-items: center;
+		width: 15em;
+		margin: auto;
+	}
+	form {
+		grid-column-start: 2;
+		text-align: center;
+	}
+</style>
