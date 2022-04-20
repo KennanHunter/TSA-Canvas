@@ -235,20 +235,12 @@ export const selfQuery = extendType({
 	definition(t) {
 		t.nonNull.field("self", {
 			type: "User",
-			resolve(parent, args, context: Context) {
-				if (!context.userId) {
-					throw new AuthenticationError(
-						"Cannot do query while not logged in",
-					);
-				}
+			async resolve(parent, args, context: Context) {
+				await isUser(context);
+
 				return context.prisma.user.findUnique({
 					where: {
 						id: context.userId,
-					},
-					include: {
-						memberClasses: true,
-						ownedClasses: true,
-						taughtClasses: true,
 					},
 				});
 			},
