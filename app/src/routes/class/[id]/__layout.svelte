@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
+	import { page } from "$app/stores";
 	import { query } from "$lib/functions/query";
-	import type { ValueTypes } from "$zeus/index";
-
+	import { setTitle } from "$lib/stores";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
 	export async function load({
@@ -32,8 +32,6 @@
 </script>
 
 <script>
-	import { page } from "$app/stores";
-	import { setTitle } from "$lib/stores";
 	let baseUrl = "/class/" + $page.params.id + "/";
 	export let value;
 	setTitle(value.name);

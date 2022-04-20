@@ -42,7 +42,7 @@
 	}
 	.left:hover {
 		h1 {
-			color: app.$primary-color;
+			color: app.$secondary-color;
 		}
 	}
 	.title {
