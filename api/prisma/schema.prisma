@@ -75,7 +75,7 @@ model Assignment {
   description          String
   color                String
   createdAt            DateTime               @default(now())
-  dueAt                DateTime?
+  dueAt                DateTime?              @db.Timestamp(0)
   maxGrade             Int?
   assignmentSubmission AssignmentSubmission[]
   Class                Class?                 @relation("assignments", fields: [classId], references: [id])

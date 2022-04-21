@@ -8,7 +8,7 @@ import { prisma, User as Userobject } from "@prisma/client";
 
 export async function isUser(context: Context) {
 	if (context.userId) {
-		context.prisma.user.findFirst({
+		return context.prisma.user.findUnique({
 			where: {
 				id: context.userId,
 			},
@@ -236,13 +236,13 @@ export const selfQuery = extendType({
 		t.nonNull.field("self", {
 			type: "User",
 			async resolve(parent, args, context: Context) {
-				await isUser(context);
+				let query = await isUser(context);
 
-				return context.prisma.user.findUnique({
-					where: {
-						id: context.userId,
-					},
-				});
+				if (query) {
+					return query;
+				} else {
+					throw new AuthenticationError("Not Authenticated");
+				}
 			},
 		});
 	},

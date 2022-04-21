@@ -1,5 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server-errors";
-import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 import { Class } from "./Class";
 
@@ -11,6 +11,7 @@ export const Assignment = objectType({
 		t.nonNull.string("description");
 		t.nonNull.string("color");
 		t.nonNull.int("maxGrade");
+		t.int("createdAt");
 		t.int("dueAt");
 		t.nonNull.field("class", {
 			type: Class,
@@ -146,20 +147,27 @@ export const AssignmentMutation = extendType({
 				classId: nonNull(stringArg()),
 				name: nonNull(stringArg()),
 				description: stringArg(),
+				dueAt: intArg(),
 			},
 			resolve(parent, args, context: Context) {
 				const {
 					classId,
 					name,
 					description,
-				}: { classId: string; name: string; description: string } =
-					args;
+					dueAt,
+				}: {
+					classId: string;
+					name: string;
+					description: string;
+					dueAt: number;
+				} = args;
 
 				return context.prisma.assignment.create({
 					data: {
 						name: name,
 						description: description,
 						color: "",
+						dueAt: new Date(dueAt),
 						Class: {
 							connect: {
 								id: classId,

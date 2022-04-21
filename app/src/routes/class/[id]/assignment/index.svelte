@@ -68,6 +68,8 @@
 				}}
 			/>
 		</a>
+	{:else}
+		<h1>There doesn't appear to be any Assignments</h1>
 	{/each}
 </div>
 

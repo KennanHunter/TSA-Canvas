@@ -39,3 +39,20 @@ a {
 		display: none;
 	}
 }
+
+.bytemd {
+	height: 90%;
+}
+
+.markdown-body {
+	background-color: unset;
+	font-family: $font;
+	color: $text-color;
+	code,
+	pre {
+		background-color: #27292c;
+	}
+	strong {
+		font-weight: 1000;
+	}
+}

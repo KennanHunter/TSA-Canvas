@@ -29,19 +29,9 @@
 </script>
 
 <script lang="ts">
+	import AssignmentView from "$lib/components/AssignmentView.svelte";
+
 	export let assignment;
 </script>
 
-<h1>{assignment.name}</h1>
-{#if assignment.dueAt}
-	<h2>Due At {new Date(assignment.dueAt).toDateString()}</h2>
-{:else}
-	<h2>No Specified Due Date</h2>
-{/if}
-<div class="description">
-	<Viewer value={assignment.description} {plugins} />
-</div>
-
-<a href="submission/">
-	<button> View Submission </button>
-</a>
+<AssignmentView {assignment} />
