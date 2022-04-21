@@ -19,15 +19,13 @@ export async function populate() {
 				avatar: "",
 			},
 		})
-		.catch(async () => {
-			adminUser = await prisma.user.findUnique({
-				where: {
-					email: "admin@tsa.kennan.tech",
-				},
-			});
-		});
+		.catch(() => {});
 	if (!adminUser) {
-		throw new Error();
+		adminUser = await prisma.user.findUnique({
+			where: {
+				email: "admin@tsa.kennan.tech",
+			},
+		});
 	}
 	let guestClass = await prisma.class
 		.create({
