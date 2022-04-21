@@ -6,6 +6,7 @@
 		mutation,
 		setAuthorizationHeader,
 	} from "$lib/functions/query";
+	import { toast } from "@zerodevx/svelte-toast";
 	import { setTitle } from "$lib/stores";
 
 	interface UserRequestData {
@@ -22,10 +23,16 @@
 		mutation({
 			login: [
 				{ email: data.email, password: data.password },
-				{ token: true },
+				{
+					token: true,
+					user: {
+						name: true,
+					},
+				},
 			],
 		}).then((value) => {
 			setAuthorizationHeader(value.login.token, data.remember);
+			toast.push("Logged in as" + value.login.user.name);
 			goto("/");
 		});
 	}

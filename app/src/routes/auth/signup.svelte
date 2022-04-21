@@ -11,6 +11,7 @@
 	import { fade } from "svelte/transition";
 	import { tweened } from "svelte/motion";
 	import { signupAsGuest } from "$lib/functions/signupAsGuest";
+	import { toast } from "@zerodevx/svelte-toast";
 
 	setTitle("Signup");
 
@@ -44,10 +45,16 @@
 		mutation({
 			signup: [
 				{ email: data.email, name: data.name, password: data.password },
-				{ token: true },
+				{
+					token: true,
+					user: {
+						name: true,
+					},
+				},
 			],
 		}).then((value) => {
 			setAuthorizationHeader(value.signup.token, data.remember);
+			toast.push("Signed up as " + value.signup.user.name);
 			goto("/");
 		});
 	}

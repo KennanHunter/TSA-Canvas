@@ -30,6 +30,8 @@
 	import "../app.scss";
 	import "bytemd/dist/index.css";
 	import type { LoadInput } from "@sveltejs/kit";
+	import { SvelteToast } from "@zerodevx/svelte-toast";
+	import ToastWrapper from "$lib/components/ToastWrapper.svelte";
 
 	export let Name = "";
 	if (!$Title) {
@@ -42,6 +44,8 @@
 <main>
 	<slot />
 </main>
+
+<ToastWrapper />
 
 <style>
 	@media only screen and (max-width: 600px) {
