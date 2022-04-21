@@ -11,8 +11,8 @@ export const Assignment = objectType({
 		t.nonNull.string("description");
 		t.nonNull.string("color");
 		t.nonNull.int("maxGrade");
-		t.int("createdAt");
-		t.int("dueAt");
+		t.string("createdAt");
+		t.string("dueAt");
 		t.nonNull.field("class", {
 			type: Class,
 			async resolve(parent, args, context: Context) {
@@ -64,7 +64,7 @@ export const AssignmentSubmission = objectType({
 	name: "AssignmentSubmission",
 	definition(t) {
 		t.nonNull.string("grade");
-		t.nonNull.int("submittedAt");
+		t.nonNull.string("submittedAt");
 		t.nonNull.field("assignment", {
 			type: "Assignment",
 			async resolve(parent, args, context: Context) {
@@ -147,7 +147,7 @@ export const AssignmentMutation = extendType({
 				classId: nonNull(stringArg()),
 				name: nonNull(stringArg()),
 				description: stringArg(),
-				dueAt: intArg(),
+				dueAt: stringArg(),
 			},
 			resolve(parent, args, context: Context) {
 				const {

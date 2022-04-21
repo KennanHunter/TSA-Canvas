@@ -2,6 +2,7 @@
 	import { Title } from "$lib/stores";
 	export let Name = "";
 	import Logo from "$static/Logo.webp";
+	import Dropdown from "./Dropdown.svelte";
 </script>
 
 <svelte:head>
@@ -14,7 +15,14 @@
 			<img src={Logo} alt="Logo" class="hiddenWhenSmall" />
 			<h1 class="title hiddenWhenSmall">{$Title}</h1>
 		</a>
-		<h1 class="name hiddenWhenSmall">{Name}</h1>
+		{#if Name}
+			<div class="left">
+				<h1 class="name hiddenWhenSmall" style="Color:inherit;">
+					{Name}
+				</h1>
+				<Dropdown />
+			</div>
+		{/if}
 	</div>
 	<hr />
 </template>

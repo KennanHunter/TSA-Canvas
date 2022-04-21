@@ -21,6 +21,11 @@
 					{
 						submittedAt: true,
 						grade: true,
+						assignment: {
+							class: {
+								hasPerms: true,
+							},
+						},
 					},
 				],
 			},

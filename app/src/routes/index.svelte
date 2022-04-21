@@ -15,6 +15,8 @@
 				self: {
 					name: true,
 					memberClasses: {
+						id: true,
+						name: true,
 						assignments: {
 							name: true,
 							dueAt: true,
@@ -24,6 +26,10 @@
 								id: true,
 							},
 						},
+					},
+					ownedClasses: {
+						id: true,
+						name: true,
 					},
 				},
 			},
@@ -66,22 +72,74 @@
 	export let selfQuery: {
 		name: string;
 		memberClasses: {
+			name: string;
+			id: string;
 			assignments: Assignment[];
 		}[];
+		ownedClasses: {
+			name: string;
+			id: string;
+		}[];
 	};
+
+	let classes: { name: string; id: string }[];
+	$: {
+		classes = ([] as { name: string; id: string }[])
+			.concat(selfQuery.memberClasses, selfQuery.ownedClasses)
+			.sort((a, b) => {
+				return a.name.charCodeAt(0) - b.name.charCodeAt(0);
+			});
+	}
 </script>
 
 <section>
-	{selfQuery.name}
-	{#each assignments as assignment}
-		<h1>
-			{assignment.name}
-		</h1>
+	<div class="classFeed hiddenWhenSmall">
+		<h2><a href="/class/" class="hiddenWhenSmall"> Classes</a></h2>
+		<ul>
+			{#each classes as klass}
+				<a href={"/class/" + klass.id}
+					><li class="hiddenWhenSmall">{klass.name}</li></a
+				>
+			{/each}
+		</ul>
+	</div>
+	<div class="assignmentFeed">
+		{#each assignments as assignment}
+			<h1>
+				{assignment.name}
+			</h1>
 
-		<em>Due At</em>
-		{new Date(assignment.dueAt).toDateString()}
-	{/each}
+			<em>Due At</em>
+			{new Date(assignment.dueAt).toDateString()}
+		{/each}
+	</div>
 </section>
 
-<style>
+<style lang="scss">
+	.classFeed {
+		display: grid;
+		grid-template-columns: auto;
+		grid-template-rows: auto auto;
+		grid-column-start: 1;
+	}
+	.assignmentFeed {
+		grid-column-start: 2;
+	}
+	section {
+		display: grid;
+		grid-template-columns: 20% auto auto;
+		grid-template-rows: auto;
+	}
+	ul {
+		list-style: none;
+		padding: unset;
+	}
+	a:hover {
+		font-weight: 900;
+	}
+	@media only screen and (max-width: 600px) {
+		section {
+			grid-template-columns: 0 auto auto;
+		}
+	}
 </style>
