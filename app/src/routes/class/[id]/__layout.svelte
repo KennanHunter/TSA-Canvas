@@ -71,7 +71,14 @@
 	.outer {
 		display: grid;
 		grid-template-columns: 14em auto;
+		height: 100%;
 	}
+	@media only screen and (max-width: 600px) {
+		.outer {
+			grid-template-columns: auto;
+		}
+	}
+
 	a {
 		all: unset;
 	}

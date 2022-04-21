@@ -61,7 +61,6 @@ export const Class = objectType({
 		});
 		t.nonNull.boolean("hasPerms", {
 			async resolve(parent, args, context: Context) {
-				console.log("parent id: " + parent.owner.id);
 				return context.userId === parent.owner.id;
 			},
 		});

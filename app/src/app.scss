@@ -34,10 +34,6 @@ a {
 	all: unset;
 }
 
-.bytemd {
-	height: 90%;
-}
-
 .markdown-body {
 	background-color: unset;
 	font-family: $font;
@@ -49,6 +45,21 @@ a {
 	strong {
 		font-weight: 1000;
 	}
+}
+
+.bytemd-preview {
+	.markdown-body,
+	h1,
+	h2,
+	h3,
+	h4,
+	blockquote {
+		color: black;
+	}
+}
+
+.bytemd {
+	flex-grow: 1;
 }
 
 @media only screen and (max-width: 600px) {

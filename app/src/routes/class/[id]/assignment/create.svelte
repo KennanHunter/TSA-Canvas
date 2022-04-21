@@ -4,16 +4,13 @@
 
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
 	import { page } from "$app/stores";
 	import AssignmentView from "$lib/components/AssignmentView.svelte";
+	import MarkdownEditor from "$lib/components/MarkdownEditor.svelte";
 	import { mutation } from "$lib/functions/query";
-	import { plugins } from "$lib/markdownPlugins";
-
-	import { Editor, Viewer } from "bytemd";
-	import { tweened, type Tweened } from "svelte/motion";
-	import ChevronRight from "svelte-material-icons/ChevronRight.svelte";
 	import ChevronLeft from "svelte-material-icons/ChevronLeft.svelte";
+	import ChevronRight from "svelte-material-icons/ChevronRight.svelte";
+	import { tweened, type Tweened } from "svelte/motion";
 
 	enum Stages {
 		name,
@@ -53,10 +50,6 @@
 					"/",
 			);
 		});
-	}
-
-	function handleMarkdownChange(event) {
-		data.description = event.detail.value;
 	}
 </script>
 
@@ -110,11 +103,7 @@
 	{#if stage === Stages.description}
 		<div class="stage">
 			<label for="description">Description: </label>
-			<Editor
-				value={data.description}
-				{plugins}
-				on:change={handleMarkdownChange}
-			/>
+			<MarkdownEditor bind:value={data.description} />
 		</div>
 	{/if}
 

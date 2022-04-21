@@ -9,7 +9,7 @@
 	<title>{$Title}</title>
 </svelte:head>
 
-<template>
+<div>
 	<div class="bar">
 		<a class="left" href="/">
 			<img src={Logo} alt="Logo" class="hiddenWhenSmall" />
@@ -25,7 +25,7 @@
 		{/if}
 	</div>
 	<hr />
-</template>
+</div>
 
 <style lang="scss">
 	@use "../../app.scss";

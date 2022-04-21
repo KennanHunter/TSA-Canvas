@@ -39,15 +39,25 @@
 	}
 </script>
 
-<Header {Name} />
+<div>
+	<Header {Name} />
 
-<main>
-	<slot />
-</main>
+	<main>
+		<slot />
+	</main>
 
-<ToastWrapper />
+	<ToastWrapper />
+</div>
 
 <style>
+	div {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+	main {
+		flex-grow: 1;
+	}
 	@media only screen and (max-width: 600px) {
 		main {
 			margin: 0 1em;

@@ -63,12 +63,27 @@ export const Assignment = objectType({
 export const AssignmentSubmission = objectType({
 	name: "AssignmentSubmission",
 	definition(t) {
-		t.nonNull.string("grade");
+		t.int("grade");
 		t.nonNull.string("submittedAt");
+		t.nonNull.string("markdownData");
 		t.nonNull.field("assignment", {
 			type: "Assignment",
 			async resolve(parent, args, context: Context) {
-				console.log(parent);
+				return await context.prisma.assignment.findUnique({
+					where: {
+						id: parent.assignmentId,
+					},
+				});
+			},
+		});
+		t.nonNull.field("user", {
+			type: "User",
+			async resolve(parent, args, context: Context) {
+				return await context.prisma.user.findUnique({
+					where: {
+						id: parent.userId,
+					},
+				});
 			},
 		});
 	},
@@ -216,16 +231,17 @@ export const SubmissionMutation = extendType({
 			type: "AssignmentSubmission",
 			args: {
 				assignmentId: nonNull(stringArg()),
-				fileId: nonNull(stringArg()),
+				value: nonNull(stringArg()),
 			},
 			async resolve(parent, args, context: Context) {
-				return await context.prisma.assignmentSubmission.create({
-					data: {
-						file: {
-							connect: {
-								id: args.fileId,
-							},
+				return await context.prisma.assignmentSubmission.upsert({
+					where: {
+						assignmentId_userId: {
+							assignmentId: args.assignmentId,
+							userId: context.userId,
 						},
+					},
+					create: {
 						assignment: {
 							connect: { id: args.assignmentId },
 						},
@@ -234,6 +250,11 @@ export const SubmissionMutation = extendType({
 								id: context.userId,
 							},
 						},
+						markdownData: args.value,
+						submitted: true,
+					},
+					update: {
+						markdownData: args.value,
 						submitted: true,
 					},
 				});

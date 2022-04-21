@@ -87,12 +87,10 @@ model AssignmentSubmission {
   member       User       @relation(fields: [userId], references: [id])
   assignmentId String
   userId       String
+  markdownData String
   grade        Int? // out of Assignment.maxGrade
   submitted    Boolean
   submittedAt  DateTime?
-
-  file         FileObject @relation(fields: [fileObjectId], references: [id])
-  fileObjectId String
 
   @@id([assignmentId, userId])
 }
@@ -101,6 +99,4 @@ model FileObject {
   id      String @id @default(cuid())
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
-
-  AssignmentSubmission AssignmentSubmission[]
 }
