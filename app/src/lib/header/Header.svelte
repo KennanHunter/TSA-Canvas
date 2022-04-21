@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Title } from "$lib/stores";
 	export let Name = "";
-	import Logo from "$static/Logo.png";
+	import Logo from "$static/Logo.webp";
 </script>
 
 <svelte:head>

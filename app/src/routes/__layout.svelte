@@ -27,9 +27,9 @@
 	import { query, queryInit } from "$lib/functions/query";
 	import Header from "$lib/header/Header.svelte";
 	import { Title } from "$lib/stores";
-	import type { LoadInput } from "@sveltejs/kit/types/private";
 	import "../app.scss";
 	import "bytemd/dist/index.css";
+	import type { LoadInput } from "@sveltejs/kit";
 
 	export let Name = "";
 	if (!$Title) {
