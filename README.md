@@ -1,6 +1,17 @@
-# Better Canvas
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Lines Of Code](https://img.shields.io/tokei/lines/github/KennanHunter/TSA-canvas?style=for-the-badge)
 
-TODO: Canvas but cooler for TSA software development 2022
+# Red Panda LMS
+
+Red Panda LMS is a Learning Management Solution built for the Technology Student Association software development competition
+
+## The Team
+
+-   [Kennan Hunter](https://github.com/KennanHunter)
+-   [Lee](https://github.com/B1ue-Phoenix)
+-   Koda
 
 ## Develop
 
@@ -13,18 +24,6 @@ chmod +x ./setupDev.sh
 ./setupDev.sh
 ```
 
-## Roadmap
+## Licensing
 
-### Version 0.1.0
-
-Planned by January 1st
-
-Features:
-
--   Authentification
--   Student View
--   Database Schema Completed
-
-### Release
-
-March 1st
+Source code is available under the MIT License
