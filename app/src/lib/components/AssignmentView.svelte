@@ -29,5 +29,6 @@
 		display: flex;
 		justify-content: space-between;
 		padding-right: 1em;
+		align-self: center;
 	}
 </style>
