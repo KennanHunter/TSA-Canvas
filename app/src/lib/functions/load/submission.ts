@@ -14,6 +14,7 @@ export async function load({
 				{
 					submittedAt: true,
 					grade: true,
+					markdownData: true,
 					assignment: {
 						class: {
 							hasPerms: true,
