@@ -22,7 +22,12 @@
 	}
 	let stage = Stages.name;
 	let stageTweened: Tweened<number> = tweened(stage);
-	let data = { name: "", description: "", dueAt: undefined };
+	let data = {
+		name: "",
+		description: "",
+		dueAt: undefined,
+		maxGrade: undefined as number,
+	};
 	$: console.log(data);
 
 	$: {
@@ -38,6 +43,7 @@
 					name: data.name,
 					description: data.description,
 					dueAt: data.dueAt,
+					maxGrade: data.maxGrade,
 				},
 				{ id: true },
 			],
@@ -112,6 +118,13 @@
 			<h1>Details</h1>
 			<label for="due">Due Date</label>
 			<input id="due" type="datetime-local" bind:value={data.dueAt} />
+			<label for="maxGrade">Max Grade</label>
+			<input
+				type="number"
+				min="0"
+				id="maxGrade"
+				bind:value={data.maxGrade}
+			/>
 		</div>
 	{/if}
 	{#if stage === Stages.preview}

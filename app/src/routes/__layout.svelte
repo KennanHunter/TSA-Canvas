@@ -4,6 +4,7 @@
 		let selfQuery = await query(
 			{
 				self: {
+					id: true,
 					name: true,
 				},
 			},
@@ -14,6 +15,7 @@
 		if (selfQuery?.self?.name) {
 			return {
 				props: {
+					Id: selfQuery.self.id,
 					Name: selfQuery.self.name,
 				},
 			};
@@ -24,16 +26,19 @@
 </script>
 
 <script lang="ts">
-	import { query, queryInit } from "$lib/functions/query";
+	import ToastWrapper from "$lib/components/ToastWrapper.svelte";
+	import { query, queryInit, userId } from "$lib/functions/query";
 	import Header from "$lib/header/Header.svelte";
 	import { Title } from "$lib/stores";
-	import "../app.scss";
-	import "bytemd/dist/index.css";
 	import type { LoadInput } from "@sveltejs/kit";
-	import { SvelteToast } from "@zerodevx/svelte-toast";
-	import ToastWrapper from "$lib/components/ToastWrapper.svelte";
+	import "bytemd/dist/index.css";
+	import "../app.scss";
 
 	export let Name = "";
+	export let Id = "";
+
+	$: userId.set(Id);
+
 	if (!$Title) {
 		Title.set("Red Panda LMS");
 	}

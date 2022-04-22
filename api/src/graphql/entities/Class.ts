@@ -61,7 +61,7 @@ export const Class = objectType({
 		});
 		t.nonNull.boolean("hasPerms", {
 			async resolve(parent, args, context: Context) {
-				return context.userId === parent.owner.id;
+				return context.userId === parent.ownerId;
 			},
 		});
 	},
@@ -138,7 +138,6 @@ export const ClassMutation = extendType({
 
 				return newClass;
 			},
-			// });
 			// t.nonNull.field("addMember", {
 			// 	type: Class,
 			// 	args: {

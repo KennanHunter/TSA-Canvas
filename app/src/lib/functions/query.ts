@@ -3,6 +3,7 @@ import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { Zeus, type GraphQLResponse, type ValueTypes } from "$zeus";
 import type { LoadOutput } from "@sveltejs/kit/types/internal";
+import { writable } from "svelte/store";
 
 export interface GQLResponse extends GraphQLResponse {
 	errors?: Array<{
@@ -17,6 +18,7 @@ export let authorizationHeader: string = undefined;
 
 export let host: string = "https://tsa.kennan.tech";
 
+export let userId = writable("");
 let inited = false;
 
 export function queryInit(hostValue?: string) {

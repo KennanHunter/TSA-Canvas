@@ -1,4 +1,8 @@
-import { ApolloError, AuthenticationError } from "apollo-server-errors";
+import {
+	ApolloError,
+	AuthenticationError,
+	ForbiddenError,
+} from "apollo-server-errors";
 import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../../context";
 import { Class } from "./Class";
@@ -10,7 +14,7 @@ export const Assignment = objectType({
 		t.nonNull.string("name");
 		t.nonNull.string("description");
 		t.nonNull.string("color");
-		t.nonNull.int("maxGrade");
+		t.int("maxGrade");
 		t.string("createdAt");
 		t.string("dueAt");
 		t.nonNull.field("class", {
@@ -163,6 +167,7 @@ export const AssignmentMutation = extendType({
 				name: nonNull(stringArg()),
 				description: stringArg(),
 				dueAt: stringArg(),
+				maxGrade: intArg(),
 			},
 			resolve(parent, args, context: Context) {
 				const {
@@ -170,11 +175,13 @@ export const AssignmentMutation = extendType({
 					name,
 					description,
 					dueAt,
+					maxGrade,
 				}: {
 					classId: string;
 					name: string;
 					description: string;
 					dueAt: number;
+					maxGrade: number;
 				} = args;
 
 				return context.prisma.assignment.create({
@@ -183,6 +190,7 @@ export const AssignmentMutation = extendType({
 						description: description,
 						color: "",
 						dueAt: new Date(dueAt),
+						maxGrade: maxGrade,
 						Class: {
 							connect: {
 								id: classId,
@@ -209,14 +217,55 @@ export const SubmissionQuery = extendType({
 			type: "AssignmentSubmission",
 			args: {
 				assignmentId: nonNull(stringArg()),
+				userId: stringArg(),
 			},
 			async resolve(parents, args, context: Context) {
-				return await context.prisma.assignmentSubmission.findFirst({
+				if (
+					//Checks if Explicitly a certain user
+					args.userId &&
+					// Checks that said User is not the currently signed in session user
+					args.userId !== context.userId
+				) {
+					if (
+						(
+							await context.prisma.assignment
+								.findUnique({
+									where: {
+										id: args.assignmentId,
+									},
+								})
+								.Class()
+								.owner()
+						).id !== context.userId
+					) {
+						throw new ForbiddenError(
+							"Submission does not belong to you",
+						);
+					}
+				}
+
+				const submission =
+					await context.prisma.assignmentSubmission.findFirst({
+						where: {
+							AND: [
+								{ assignmentId: args.assignmentId },
+								{ userId: args.userId || context.userId },
+							],
+						},
+					});
+
+				return submission;
+			},
+		});
+		t.list.field("getAllSubmissions", {
+			type: "AssignmentSubmission",
+			args: {
+				assignmentId: nonNull(stringArg()),
+			},
+			resolve(parent, args, context: Context) {
+				return context.prisma.assignmentSubmission.findMany({
 					where: {
-						AND: [
-							{ assignmentId: args.assignmentId },
-							{ userId: context.userId },
-						],
+						assignmentId: args.assignmentId,
 					},
 				});
 			},
@@ -227,6 +276,33 @@ export const SubmissionQuery = extendType({
 export const SubmissionMutation = extendType({
 	type: "Mutation",
 	definition(t) {
+		t.field("gradeAssignment", {
+			type: "AssignmentSubmission",
+			args: {
+				assignmentId: nonNull(stringArg()),
+				userId: nonNull(stringArg()),
+				grade: nonNull(intArg()),
+				comment: stringArg(),
+			},
+			resolve(parent, args, context: Context) {
+				if (args.comment) {
+					console.log(args.comment);
+				}
+
+				return context.prisma.assignmentSubmission.update({
+					where: {
+						assignmentId_userId: {
+							assignmentId: args.assignmentId,
+							userId: args.userId,
+						},
+					},
+					data: {
+						grade: args.grade,
+						gradedAt: new Date(),
+					},
+				});
+			},
+		});
 		t.field("submitAssignment", {
 			type: "AssignmentSubmission",
 			args: {
@@ -242,6 +318,7 @@ export const SubmissionMutation = extendType({
 						},
 					},
 					create: {
+						// Id Shits
 						assignment: {
 							connect: { id: args.assignmentId },
 						},
@@ -250,12 +327,16 @@ export const SubmissionMutation = extendType({
 								id: context.userId,
 							},
 						},
+
+						// Not Id Shits
 						markdownData: args.value,
 						submitted: true,
+						submittedAt: new Date(),
 					},
 					update: {
 						markdownData: args.value,
 						submitted: true,
+						submittedAt: new Date(),
 					},
 				});
 			},

@@ -1,8 +1,7 @@
 <script context="module" lang="ts">
+	import AssignmentView from "$lib/components/AssignmentView.svelte";
 	import { query } from "$lib/functions/query";
-	import { plugins } from "$lib/markdownPlugins";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
-	import { Viewer } from "bytemd";
 
 	export async function load({
 		params,
@@ -17,7 +16,14 @@
 						{
 							Assignment: [
 								{ assignmentId: params.assignmentId },
-								{ name: true, description: true, dueAt: true },
+								{
+									name: true,
+									description: true,
+									dueAt: true,
+									class: {
+										hasPerms: true,
+									},
+								},
 							],
 						},
 						fetch,
@@ -29,8 +35,6 @@
 </script>
 
 <script lang="ts">
-	import AssignmentView from "$lib/components/AssignmentView.svelte";
-
 	export let assignment;
 </script>
 

@@ -89,6 +89,7 @@ model AssignmentSubmission {
   userId       String
   markdownData String
   grade        Int? // out of Assignment.maxGrade
+  gradedAt     DateTime?
   submitted    Boolean
   submittedAt  DateTime?
 
