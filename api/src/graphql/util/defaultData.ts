@@ -27,40 +27,43 @@ export async function populate() {
 			},
 		});
 	}
+
 	let guestClass = await prisma.class
-		.create({
-			data: {
+		.findFirst({
+			where: {
 				name: "Example Class",
-				owner: {
-					connect: {
-						id: adminUser.id,
-					},
-				},
-				color: "",
-				assignments: {
-					create: {
-						name: "Example Assignment",
-						description: readFileSync(
-							resolve(__dirname, "defaultAssignment.md"),
-						).toString(),
-						color: "#ffffff",
-						dueAt: new Date(2022, 8, 10, 3, 24, 0),
-					},
-				},
+				ownerId: (adminUser as User).id,
 			},
 		})
-		.catch(async () => {
-			guestClass = await prisma.class.findFirst({
-				where: {
+		.catch(() => {});
+	if (!guestClass) {
+		guestClass = await prisma.class
+			.create({
+				data: {
 					name: "Example Class",
-					ownerId: (adminUser as User).id,
+					owner: {
+						connect: {
+							id: adminUser.id,
+						},
+					},
+					color: "",
+					assignments: {
+						create: {
+							name: "Example Assignment",
+							description: readFileSync(
+								resolve(__dirname, "defaultAssignment.md"),
+							).toString(),
+							color: "#ffffff",
+							dueAt: new Date(2022, 8, 10, 3, 24, 0),
+						},
+					},
 				},
-			});
-		});
+			})
+			.catch(async () => {});
+	}
 	if (!guestClass) {
 		throw new Error();
 	}
-
 	guestClassId = guestClass.id;
 
 	console.log("Population Successful");

@@ -4,14 +4,20 @@
 
 	import Menu from "svelte-material-icons/Menu.svelte";
 	let dropdown: boolean;
+
+	let dropdownCounter: number = 0;
 </script>
 
 <div class="template">
 	<button
 		on:click={() => {
 			dropdown = !dropdown;
+			dropdownCounter++;
+			let localCounter = dropdownCounter.valueOf();
 			setTimeout(() => {
-				dropdown = false;
+				if (localCounter === dropdownCounter) {
+					dropdown = false;
+				}
 			}, 5000);
 		}}
 	>

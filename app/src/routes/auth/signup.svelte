@@ -103,6 +103,7 @@
 			value="Signup As Guest"
 			on:click|preventDefault={signupAsGuest}
 		/>
+		<a href="/auth/login"><input type="button" value="Log In Instead" /></a>
 	</form>
 
 	<div class="strength" in:fade>
