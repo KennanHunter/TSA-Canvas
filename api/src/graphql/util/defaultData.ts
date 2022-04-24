@@ -55,6 +55,7 @@ export async function populate() {
 							).toString(),
 							color: "#ffffff",
 							dueAt: new Date(2022, 8, 10, 3, 24, 0),
+							maxGrade: 100,
 						},
 					},
 				},
