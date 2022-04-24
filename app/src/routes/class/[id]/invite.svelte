@@ -37,7 +37,7 @@
 
 <section>
 	<div>
-		<h1>Your Invite</h1>
+		<h1>Your Invite Link</h1>
 
 		<a href={$page.url.origin + "/class/invite/" + inviteId}>
 			{$page.url.origin + "/class/invite/" + inviteId}
@@ -52,5 +52,9 @@
 	}
 	div {
 		grid-column-start: 2;
+	}
+	a {
+		text-decoration: underline;
+		color: lightseagreen;
 	}
 </style>
