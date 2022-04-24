@@ -39,7 +39,7 @@
 		progressBar.set(0.2 * (zxcvbnResult.score + 1));
 	}
 
-	let data: UserSignupData = {};
+	let data: UserSignupData = { remember: true };
 
 	function onSubmit(event) {
 		mutation({

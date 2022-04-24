@@ -17,7 +17,7 @@
 
 	setTitle("Login");
 
-	let data: UserRequestData = {};
+	let data: UserRequestData = { remember: true };
 
 	function onSubmit(event) {
 		mutation({
