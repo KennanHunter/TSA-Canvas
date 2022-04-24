@@ -32,7 +32,7 @@
 			],
 		}).then((value) => {
 			setAuthorizationHeader(value.login.token, data.remember);
-			toast.push("Logged in as" + value.login.user.name);
+			toast.push("Logged in as " + value.login.user.name);
 			goto("/");
 		});
 	}
