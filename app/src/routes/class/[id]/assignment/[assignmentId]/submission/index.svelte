@@ -1,22 +1,28 @@
 <script lang="ts" context="module">
+	import { page } from "$app/stores";
 	import { load } from "$lib/functions/load/submission";
+	import { mutation } from "$lib/functions/query";
+	import { Viewer } from "bytemd";
 	import Check from "svelte-material-icons/Check.svelte";
 	import CheckboxBlankOutline from "svelte-material-icons/CheckboxBlankOutline.svelte";
 	export { load };
 </script>
 
 <script lang="ts">
-	import { Viewer } from "bytemd";
-
 	interface Submission {
 		user: {
 			name: string;
+			id: string;
 		};
 		grade: number;
 		markdownData: string;
+		assignment: {
+			maxGrade: number;
+		};
 	}
 	export let submissions: Submission[];
-
+	let graded;
+	$: graded = currentPreview && currentPreview.assignment.maxGrade;
 	submissions.sort((a, b) => {
 		if (!!a.grade === !b.grade) {
 			// Case if one is completed and one is not
@@ -29,12 +35,23 @@
 	});
 
 	let currentPreview: Submission;
+
+	let grade: number;
 </script>
 
 <div class="wrap">
-	<ul>
+	<ul style={graded ? "" : "grid-row: 1/3"}>
 		{#each submissions as submission}
-			<li>
+			<li
+				on:click={() => {
+					if (currentPreview === submission) {
+						currentPreview = null;
+					} else {
+						currentPreview = submission;
+					}
+				}}
+				class={currentPreview === submission ? "active" : ""}
+			>
 				<div class="icon">
 					<div>
 						{#if submission.grade}
@@ -44,12 +61,16 @@
 						{/if}
 					</div>
 				</div>
-				<div>
-					<h3>
+				<div class="center">
+					<h3 style="grid-column-start: 1">
 						{submission.user.name}
 					</h3>
 				</div>
 			</li>
+		{:else}
+			<div class="center">
+				<h1>There are no submissions for this assignment.</h1>
+			</div>
 		{/each}
 	</ul>
 	<div class="preview">
@@ -61,18 +82,53 @@
 			</div>
 		{/if}
 	</div>
+	<div class="gradingMenu">
+		{#if graded}
+			<form
+				on:submit|preventDefault={() => {
+					mutation({
+						gradeAssignment: [
+							{
+								assignmentId: $page.params.assignmentId,
+								userId: currentPreview.user.id,
+								grade: grade,
+							},
+							{},
+						],
+					});
+				}}
+			>
+				<label for="grade">Grade Submission: </label>
+				<input
+					type="number"
+					name="grade"
+					id="grade"
+					bind:value={grade}
+				/>
+				<p>/{currentPreview.assignment.maxGrade}</p>
+				<button type="submit">Commit</button>
+			</form>
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
 	@use "../../../../../../app.scss";
 	.wrap {
 		display: grid;
-		grid-template-columns: auto auto;
-		grid-template-rows: 100%;
+		grid-template-columns: 20em auto;
+		grid-template-rows: 70% 30%;
 		height: 100%;
 	}
 	.preview {
 		border: 0.4em app.$secondary-color solid;
+		border-radius: 1em;
+		padding: 1em;
+		grid-row: 1/3;
+		grid-column: 2/3;
+	}
+	.active {
+		background-color: app.$primary-color;
 		border-radius: 1em;
 	}
 	ul {
@@ -80,23 +136,24 @@
 		border-radius: 1em;
 		padding: 0;
 		margin: 0;
+		overflow: hidden scroll;
+	}
 
-		li {
-			height: 5em;
-			list-style: none;
+	li {
+		height: 5em;
+		list-style: none;
+		display: grid;
+		grid-template-columns: 2em auto;
+		grid-template-rows: auto auto;
+		.icon {
+			grid-column: 1;
+			grid-row: 1/3;
+			text-align: center;
 			display: grid;
-			grid-template-columns: 2em auto;
-			grid-template-rows: auto auto;
-			.icon {
-				grid-column: 1;
-				grid-row: 1/3;
-				text-align: center;
-				display: grid;
-				grid-template: auto auto auto / auto auto auto;
-				div {
-					grid-row-start: 2;
-					grid-column-start: 2;
-				}
+			grid-template: auto auto auto / auto auto auto;
+			div {
+				grid-row-start: 2;
+				grid-column-start: 2;
 			}
 		}
 	}
@@ -109,7 +166,9 @@
 		grid-template-rows: auto auto auto;
 		grid-template-columns: auto auto auto;
 		height: 100%;
-		h1 {
+		h1,
+		h2,
+		h3 {
 			grid-row-start: 2;
 			grid-column-start: 2;
 			text-align: center;

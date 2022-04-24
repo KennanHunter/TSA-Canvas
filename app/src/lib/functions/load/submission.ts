@@ -76,9 +76,14 @@ function getAllSubmissions(params) {
 			},
 			{
 				user: {
+					id: true,
 					name: true,
 				},
 				grade: true,
+				markdownData: true,
+				assignment: {
+					maxGrade: true,
+				},
 			},
 		],
 	});

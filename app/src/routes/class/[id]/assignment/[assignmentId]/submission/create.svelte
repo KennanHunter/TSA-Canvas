@@ -1,7 +1,10 @@
 <script>
+	import { goto } from "$app/navigation";
+
 	import { page } from "$app/stores";
 	import MarkdownEditor from "$lib/components/MarkdownEditor.svelte";
 	import { mutation } from "$lib/functions/query";
+	import { toast } from "@zerodevx/svelte-toast";
 	import { Editor } from "bytemd";
 
 	let value;
@@ -25,6 +28,9 @@
 							},
 						},
 					],
+				}).then((value) => {
+					goto($page.url.pathname);
+					toast.push("Assignment Successfully Submitted");
 				});
 			}}
 		>
