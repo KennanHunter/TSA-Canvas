@@ -137,11 +137,13 @@
 	{/if}
 
 	{#if stage === Stages.create}
-		<button type="submit" on:click|preventDefault={Submit}> Create </button>
+		<button type="submit" on:click|preventDefault={Submit}>
+			Create Assignment
+		</button>
 	{/if}
 
 	{#if stage === Stages.sync}
-		<h1>TODO: Sync</h1>
+		<h1>Sync to other Classes</h1>
 	{/if}
 </form>
 

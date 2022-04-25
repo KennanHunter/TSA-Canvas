@@ -4,7 +4,7 @@
 
 	export let assignment: {
 		name: string;
-		dueAt: number;
+		dueAt: string;
 		description: string;
 		maxGrade?: number;
 		class?: {
@@ -15,14 +15,18 @@
 
 <div class="top">
 	<h1>{assignment.name}</h1>
-	<a href="submission/">
-		<button>
-			{assignment.class.hasPerms ? "View Submissions" : "View Submission"}
-		</button>
-	</a>
+	{#if assignment.class}
+		<a href="submission/">
+			<button>
+				{assignment.class.hasPerms
+					? "View Submissions"
+					: "View Submission"}
+			</button>
+		</a>
+	{/if}
 </div>
 {#if assignment.dueAt}
-	<h2>Due At {new Date(assignment.dueAt).toDateString()}</h2>
+	<h2>Due At {assignment.dueAt}</h2>
 {:else}
 	<h2>No Specified Due Date</h2>
 {/if}
