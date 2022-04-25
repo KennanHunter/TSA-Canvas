@@ -61,6 +61,19 @@ export const Assignment = objectType({
 				}
 			},
 		});
+		t.field("submission", {
+			type: "AssignmentSubmission",
+			resolve(parent, args, context: Context) {
+				return context.prisma.assignmentSubmission.findUnique({
+					where: {
+						assignmentId_userId: {
+							assignmentId: parent.id,
+							userId: context.userId,
+						},
+					},
+				});
+			},
+		});
 	},
 });
 
