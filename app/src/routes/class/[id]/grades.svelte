@@ -68,7 +68,7 @@
 			</td>
 			{#if assignment.submission && assignment.submission.grade}
 				<td>
-					{assignment.submission.grade / assignment.maxGrade}
+					{assignment.submission.grade / assignment.maxGrade}%
 				</td>
 				<td>
 					{assignment.submission.grade}
@@ -84,6 +84,24 @@
 	{:else}
 		<h1>You don't have any assignments</h1>
 	{/each}
+	{#if grades.assignments.length > 0}
+		<tr class="header">
+			<td>Total: </td>
+			<td>
+				{() => {
+					let sum = 0;
+					let totalPos = 0;
+					grades.assignments.forEach((assignment) => {
+						sum += assignment.submission.grade;
+						totalPos += assignment.maxGrade;
+					});
+					return totalPos / sum;
+				}}%
+			</td>
+			<td />
+			<td />
+		</tr>
+	{/if}
 </table>
 
 <style lang="scss">

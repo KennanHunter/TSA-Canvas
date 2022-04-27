@@ -3,7 +3,7 @@
 
 	import { page } from "$app/stores";
 	import MarkdownEditor from "$lib/components/MarkdownEditor.svelte";
-	import { mutation } from "$lib/functions/query";
+	import { mutation, userId } from "$lib/functions/query";
 	import { toast } from "@zerodevx/svelte-toast";
 	import { Editor } from "bytemd";
 
@@ -23,13 +23,21 @@
 							value: value,
 						},
 						{
+							user: { id: true },
 							assignment: {
 								id: true,
 							},
 						},
 					],
 				}).then((value) => {
-					goto($page.url.pathname);
+					goto(
+						"/class/" +
+							$page.params.id +
+							"/assignment/" +
+							$page.params.assignmentId +
+							"/submission/" +
+							value.submitAssignment.user.id,
+					);
 					toast.push("Assignment Successfully Submitted");
 				});
 			}}

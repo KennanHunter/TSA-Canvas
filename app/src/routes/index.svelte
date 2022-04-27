@@ -3,6 +3,7 @@
 		name: string;
 		dueAt: number;
 		id: string;
+		maxGrade?: number;
 		class: {
 			name: string;
 			id: string;
@@ -24,6 +25,7 @@
 						assignments: {
 							name: true,
 							dueAt: true,
+							maxGrade: true,
 							id: true,
 							class: {
 								name: true,
@@ -144,7 +146,13 @@
 						"/submission/"}
 				>
 					<div>
-						{#if assignment.submission && assignment.submission.isSubmitted}
+						{#if assignment.submission && assignment.submission.grade}
+							<p>
+								{(assignment.submission.grade /
+									assignment.maxGrade) *
+									100}%
+							</p>
+						{:else if assignment.submission && assignment.submission.isSubmitted}
 							<Check size="2em" />
 						{:else}
 							<p>Unsubmitted</p>
@@ -185,7 +193,7 @@
 		.icon {
 			display: grid;
 			grid-template: auto auto auto/ auto auto auto;
-			a {
+			div {
 				grid-row-start: 2;
 				grid-column-start: 2;
 				text-align: center;

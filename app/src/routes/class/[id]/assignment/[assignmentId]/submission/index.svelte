@@ -9,6 +9,8 @@
 </script>
 
 <script lang="ts">
+	import { userId } from "$lib/functions/query";
+
 	interface Submission {
 		user: {
 			name: string;
@@ -54,8 +56,22 @@
 			>
 				<div class="icon">
 					<div>
-						{#if submission.grade}
+						{#if submission.grade || (() => {
+								if (currentPreview.user.id === submission.user.id) {
+									if (currentPreview.grade) {
+										submission.grade = currentPreview.grade;
+										return true;
+									} else {
+										return false;
+									}
+								}
+							})()}
 							<Check />
+							{#if submission.grade}
+								{(submission.grade /
+									submission.assignment.maxGrade) *
+									100}%
+							{/if}
 						{:else}
 							<CheckboxBlankOutline />
 						{/if}
@@ -93,8 +109,12 @@
 								userId: currentPreview.user.id,
 								grade: grade,
 							},
-							{},
+							{
+								grade: true,
+							},
 						],
+					}).then((value) => {
+						currentPreview.grade = value.gradeAssignment.grade;
 					});
 				}}
 			>
@@ -175,6 +195,14 @@
 			margin: 0;
 			padding: 0;
 			height: fit-content;
+		}
+	}
+	.gradingMenu {
+		form {
+			input,
+			p {
+				display: inline-block;
+			}
 		}
 	}
 </style>

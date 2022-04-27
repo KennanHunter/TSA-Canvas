@@ -46,7 +46,8 @@ export function setAuthorizationHeader(data: string, remember: boolean) {
 }
 
 function fromAuthStorage() {
-	authorizationHeader = localStorage.getItem("token");
+	authorizationHeader =
+		localStorage.getItem("token") || sessionStorage.getItem("token");
 }
 
 export function fromCookie(response: Request) {
@@ -60,7 +61,7 @@ export function fromCookie(response: Request) {
 }
 
 function setAuthStorage(token: string, remember: boolean) {
-	(remember ? sessionStorage : localStorage).setItem("token", token);
+	(remember ? localStorage : sessionStorage).setItem("token", token);
 }
 
 async function postEndpoint(
