@@ -67,13 +67,13 @@
 
 <h1>Assignments</h1>
 
-<div>
-	{#if Class.hasPerms}
-		<a href={$page.url.href + "assignment/create"}
-			><button>Create assignment</button></a
-		>
-	{/if}
+{#if Class.hasPerms}
+	<a href={$page.url.href + "assignment/create"}
+		><button>Create assignment</button></a
+	>
+{/if}
 
+<div>
 	{#each assignments as assignment}
 		<a href={$page.url.href + assignment.id}>
 			<Card

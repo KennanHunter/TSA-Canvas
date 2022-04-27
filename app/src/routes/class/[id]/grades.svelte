@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
 	import { query } from "$lib/functions/query";
-
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
 	export async function load({
@@ -53,13 +52,15 @@
 <h1>Grades</h1>
 
 <table>
-	<tr class="header">
-		<td>Name</td>
-		<td>Percentage</td>
-		<td>Grade</td>
-		<td>Max Grade</td>
-	</tr>
-	<hr />
+	{#if grades.assignments.length > 0}
+		<tr class="header">
+			<td>Name</td>
+			<td>Percentage</td>
+			<td>Grade</td>
+			<td>Max Grade</td>
+		</tr>
+		<hr />
+	{/if}
 	{#each grades.assignments as assignment}
 		<tr>
 			<td>
