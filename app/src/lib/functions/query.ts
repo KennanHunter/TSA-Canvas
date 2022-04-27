@@ -37,13 +37,11 @@ export function queryInit(hostValue?: string) {
 
 export function setAuthorizationHeader(data: string, remember: boolean) {
 	authorizationHeader = data;
+	setAuthStorage(authorizationHeader, remember);
 	if (remember) {
 		document.cookie = "authentication=" + authorizationHeader;
-		setAuthStorage(authorizationHeader);
 	} else {
 		document.cookie = "authentication=" + "";
-
-		setAuthStorage("");
 	}
 }
 
@@ -61,8 +59,8 @@ export function fromCookie(response: Request) {
 	}
 }
 
-function setAuthStorage(token: string) {
-	localStorage.setItem("token", token);
+function setAuthStorage(token: string, remember: boolean) {
+	(remember ? sessionStorage : localStorage).setItem("token", token);
 }
 
 async function postEndpoint(

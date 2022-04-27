@@ -26,7 +26,7 @@
 	{#if dropdown}
 		<ul transition:fade={{ duration: 300 }}>
 			<a href="/class/"><li>View All Classes</li></a>
-			<a href="/settings/"> <li>Settings</li></a>
+			<!-- <a href="/settings/"> <li>Settings</li></a> -->
 			<li on:click={logout}>Logout</li>
 		</ul>
 	{/if}

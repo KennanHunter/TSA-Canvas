@@ -1,13 +1,12 @@
+<script context="module">
+	export let prerender = true;
+</script>
+
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
-	import {
-		authorizationHeader,
-		mutation,
-		setAuthorizationHeader,
-	} from "$lib/functions/query";
-	import { toast } from "@zerodevx/svelte-toast";
+	import { mutation, setAuthorizationHeader } from "$lib/functions/query";
 	import { setTitle } from "$lib/stores";
+	import { toast } from "@zerodevx/svelte-toast";
 
 	interface UserRequestData {
 		email?: string;

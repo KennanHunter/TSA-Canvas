@@ -7,6 +7,10 @@
 			name: string;
 			id: string;
 		};
+		submission?: {
+			grade?: number;
+			isSubmitted: boolean;
+		};
 	}
 
 	export async function load({ url, fetch }: LoadInput) {
@@ -24,6 +28,10 @@
 							class: {
 								name: true,
 								id: true,
+							},
+							submission: {
+								grade: true,
+								isSubmitted: true,
 							},
 						},
 					},
@@ -65,6 +73,7 @@
 	import { query } from "$lib/functions/query";
 	import { setTitle } from "$lib/stores";
 	import type { LoadInput } from "@sveltejs/kit/types/internal";
+	import Check from "svelte-material-icons/Check.svelte";
 
 	setTitle();
 
@@ -105,30 +114,94 @@
 	</div>
 	<div class="assignmentFeed">
 		{#each assignments as assignment}
-			<h1>
-				{assignment.name}
-			</h1>
+			<a
+				class="assignment"
+				href={"/class/" +
+					assignment.class.id +
+					"/assignment/" +
+					assignment.id}
+			>
+				<div>
+					<h1>
+						{assignment.name}
+					</h1>
 
-			<em>Due At</em>
-			{new Date(assignment.dueAt).toDateString()}
+					<p>
+						<em style="padding-right: 0.2em;">Due on</em>
+						{new Date(Math.floor(assignment.dueAt)).toDateString() +
+							" at " +
+							new Date(
+								Math.floor(assignment.dueAt),
+							).toLocaleTimeString()}
+					</p>
+				</div>
+				<a
+					class="icon"
+					href={"/class/" +
+						assignment.class.id +
+						"/assignment/" +
+						assignment.id +
+						"/submission/"}
+				>
+					<div>
+						{#if assignment.submission && assignment.submission.isSubmitted}
+							<Check size="2em" />
+						{:else}
+							<p>Unsubmitted</p>
+						{/if}
+					</div>
+				</a>
+			</a>
 		{/each}
 	</div>
 </section>
 
 <style lang="scss">
+	@use "../app.scss";
 	.classFeed {
-		display: grid;
-		grid-template-columns: auto;
-		grid-template-rows: auto auto;
+		h2 {
+			margin-top: 0;
+		}
+		border: 0.4em app.$secondary-color solid;
+		border-radius: 1em;
+		padding: 1em;
+		margin: 0em 1em 0 0.4em;
 		grid-column-start: 1;
+		height: 80%;
 	}
 	.assignmentFeed {
 		grid-column-start: 2;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4em;
 	}
+	.assignment {
+		border: 0.4em app.$secondary-color solid;
+		border-radius: 1em;
+		padding: 0.5em;
+		padding-bottom: 1em;
+		display: grid;
+		grid-template-columns: 70% 30%;
+		.icon {
+			display: grid;
+			grid-template: auto auto auto/ auto auto auto;
+			a {
+				grid-row-start: 2;
+				grid-column-start: 2;
+				text-align: center;
+				display: flex;
+
+				flex-direction: column;
+				justify-content: space-between;
+			}
+		}
+	}
+
 	section {
 		display: grid;
-		grid-template-columns: 20% auto auto;
+		grid-template-columns: 13em auto auto;
 		grid-template-rows: auto;
+		height: 100%;
 	}
 	ul {
 		list-style: none;

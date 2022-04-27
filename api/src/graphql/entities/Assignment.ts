@@ -81,6 +81,11 @@ export const AssignmentSubmission = objectType({
 	name: "AssignmentSubmission",
 	definition(t) {
 		t.int("grade");
+		t.nonNull.boolean("isSubmitted", {
+			resolve() {
+				return true;
+			},
+		});
 		t.nonNull.string("submittedAt");
 		t.nonNull.string("markdownData");
 		t.nonNull.field("assignment", {

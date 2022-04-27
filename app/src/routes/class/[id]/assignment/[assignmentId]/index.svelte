@@ -28,9 +28,10 @@
 			)
 		).Assignment;
 
-		console.log(data.dueAt);
-		data.dueAt = new Date(Math.floor(data.dueAt)).toDateString();
-		console.log(data.dueAt);
+		data.dueAt =
+			new Date(Math.floor(data.dueAt)).toDateString() +
+			" at " +
+			new Date(Math.floor(data.dueAt)).toLocaleTimeString();
 
 		return {
 			props: {

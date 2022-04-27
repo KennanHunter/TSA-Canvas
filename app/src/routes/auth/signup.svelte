@@ -1,17 +1,16 @@
+<script context="module">
+	export let prerender = true;
+</script>
+
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
-	import {
-		authorizationHeader,
-		mutation,
-		setAuthorizationHeader,
-	} from "$lib/functions/query";
-	import { setTitle, Title } from "$lib/stores";
-	import zxcvbn, { type ZXCVBNResult } from "zxcvbn";
-	import { fade } from "svelte/transition";
-	import { tweened } from "svelte/motion";
+	import { mutation, setAuthorizationHeader } from "$lib/functions/query";
 	import { signupAsGuest } from "$lib/functions/signupAsGuest";
+	import { setTitle } from "$lib/stores";
 	import { toast } from "@zerodevx/svelte-toast";
+	import { tweened } from "svelte/motion";
+	import { fade } from "svelte/transition";
+	import type { ZXCVBNResult } from "zxcvbn";
 
 	setTitle("Signup");
 
@@ -19,6 +18,7 @@
 		email?: string;
 		name?: string;
 		password?: string;
+		repeat?: string;
 		remember?: boolean;
 	}
 
@@ -26,6 +26,12 @@
 	let passwordFlavourText: string = "";
 
 	let progressBar = tweened(0);
+
+	let zxcvbn: Function;
+
+	import("zxcvbn").then(({ default: importedFunc }) => {
+		zxcvbn = importedFunc;
+	});
 
 	$: if (data.password) {
 		zxcvbnResult = zxcvbn(data.password);
@@ -84,6 +90,19 @@
 			id=""
 			required
 		/>
+		{#if data.password}
+			<label for="password">Repeat Password: </label>
+			<input
+				type="password"
+				name="password"
+				bind:value={data.repeat}
+				id=""
+				required
+			/>
+		{/if}
+		{#if data.password !== data.repeat}
+			<p style="color: red;">Passwords do not match</p>
+		{/if}
 		<div id="remember">
 			<label for="remember">Remember Me:</label>
 			<input
