@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+	import { page } from "$app/stores";
 	import { query } from "$lib/functions/query";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
 
@@ -18,6 +19,7 @@
 										id: true,
 										name: true,
 										maxGrade: true,
+										createdAt: true,
 										submission: {
 											grade: true,
 										},
@@ -35,6 +37,7 @@
 
 <script lang="ts">
 	interface Assignment {
+		id: string;
 		name: string;
 		maxGrade: number;
 		submission: {
@@ -45,8 +48,6 @@
 	export let grades: {
 		assignments: Assignment[];
 	};
-
-	grades.assignments.forEach((value) => {});
 </script>
 
 <h1>Grades</h1>
@@ -64,11 +65,18 @@
 	{#each grades.assignments as assignment}
 		<tr>
 			<td>
-				{assignment.name}
+				<a
+					href={"/class/" +
+						$page.params.id +
+						"/assignment/" +
+						assignment.id}
+				>
+					{assignment.name}
+				</a>
 			</td>
 			{#if assignment.submission && assignment.submission.grade}
 				<td>
-					{assignment.submission.grade / assignment.maxGrade}%
+					{(assignment.submission.grade / assignment.maxGrade) * 100}%
 				</td>
 				<td>
 					{assignment.submission.grade}
@@ -85,18 +93,25 @@
 		<h1>You don't have any assignments</h1>
 	{/each}
 	{#if grades.assignments.length > 0}
-		<tr class="header">
+		<tr class="footer">
 			<td>Total: </td>
 			<td>
-				{() => {
+				{(() => {
 					let sum = 0;
 					let totalPos = 0;
 					grades.assignments.forEach((assignment) => {
-						sum += assignment.submission.grade;
-						totalPos += assignment.maxGrade;
+						if (assignment.submission) {
+							sum += assignment.submission.grade;
+							totalPos += assignment.maxGrade;
+						}
 					});
-					return totalPos / sum;
-				}}%
+					let value = totalPos / sum;
+					if (value && value !== Infinity) {
+						return (value * 100).toString() + "%";
+					} else {
+						return "";
+					}
+				})()}
 			</td>
 			<td />
 			<td />
@@ -122,5 +137,9 @@
 		td {
 			flex-grow: 1;
 		}
+	}
+	.footer {
+		padding-top: 0.2em;
+		border-top: 0.1em solid black;
 	}
 </style>

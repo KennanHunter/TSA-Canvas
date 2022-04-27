@@ -9,8 +9,6 @@
 </script>
 
 <script lang="ts">
-	import { userId } from "$lib/functions/query";
-
 	interface Submission {
 		user: {
 			name: string;
@@ -46,6 +44,7 @@
 		{#each submissions as submission}
 			<li
 				on:click={() => {
+					grade = undefined;
 					if (currentPreview === submission) {
 						currentPreview = null;
 					} else {
@@ -56,25 +55,27 @@
 			>
 				<div class="icon">
 					<div>
-						{#if submission.grade || (() => {
-								if (currentPreview.user.id === submission.user.id) {
-									if (currentPreview.grade) {
-										submission.grade = currentPreview.grade;
-										return true;
-									} else {
-										return false;
+						{#key currentPreview}
+							{#if submission.grade || (() => {
+									if (currentPreview && currentPreview.user.id === submission.user.id) {
+										if (currentPreview.grade) {
+											submission.grade = currentPreview.grade;
+											return true;
+										} else {
+											return false;
+										}
 									}
-								}
-							})()}
-							<Check />
-							{#if submission.grade}
-								{(submission.grade /
-									submission.assignment.maxGrade) *
-									100}%
+								})()}
+								<Check />
+								{#if submission.grade}
+									{(submission.grade /
+										submission.assignment.maxGrade) *
+										100}%
+								{/if}
+							{:else}
+								<CheckboxBlankOutline />
 							{/if}
-						{:else}
-							<CheckboxBlankOutline />
-						{/if}
+						{/key}
 					</div>
 				</div>
 				<div class="center">
