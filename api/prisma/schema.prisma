@@ -30,6 +30,7 @@ model User {
   memberClasses         Class[]                @relation(name: "memberClasses")
   AssignmentSubmissions AssignmentSubmission[]
   FileObject            FileObject[]
+  Todo                  Todo[]
 }
 
 model UserPreferences {
@@ -101,4 +102,12 @@ model FileObject {
   id      String @id @default(cuid())
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
+}
+
+model Todo {
+  id        String  @id @default(cuid())
+  text      String
+  completed Boolean
+  owner     User    @relation(fields: [userId], references: [id])
+  userId    String
 }

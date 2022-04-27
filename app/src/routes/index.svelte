@@ -41,12 +41,15 @@
 						id: true,
 						name: true,
 					},
+					todos: {
+						id: true,
+						text: true,
+						completed: true,
+					},
 				},
 			},
 			fetch,
 		);
-
-		console.log(selfQuery);
 
 		let assignmentArray: Assignment[] = [];
 		selfQuery.self.memberClasses.forEach((element) => {
@@ -72,10 +75,13 @@
 </script>
 
 <script lang="ts">
-	import { query } from "$lib/functions/query";
+	import { goto } from "$app/navigation";
+	import { fade } from "svelte/transition";
+	import { mutation, query } from "$lib/functions/query";
 	import { setTitle } from "$lib/stores";
 	import type { LoadInput } from "@sveltejs/kit/types/internal";
 	import Check from "svelte-material-icons/Check.svelte";
+	import Plus from "svelte-material-icons/Plus.svelte";
 
 	setTitle();
 
@@ -90,6 +96,11 @@
 		ownedClasses: {
 			name: string;
 			id: string;
+		}[];
+		todos: {
+			id: string;
+			text: string;
+			completed: boolean;
 		}[];
 	};
 
@@ -162,6 +173,36 @@
 			</a>
 		{/each}
 	</div>
+	<div class="customTodo">
+		<div class="topBar">
+			<h1>To-Dos</h1>
+			<button
+				on:click={() => {
+					goto("/todo/create");
+				}}
+			>
+				<Plus size="1.6em" />
+			</button>
+		</div>
+		{#each selfQuery.todos || [] as todo}
+			{#if !todo.completed}
+				<div class="todo" transition:fade>
+					<p>{todo.text}</p>
+					<button
+						on:click={() => {
+							mutation({
+								completeTodo: [{ id: todo.id }, { id: true }],
+							}).then(() => {
+								todo.completed = true;
+							});
+						}}
+					>
+						<Check size="1.6em" />
+					</button>
+				</div>
+			{/if}
+		{/each}
+	</div>
 </section>
 
 <style lang="scss">
@@ -176,6 +217,26 @@
 		margin: 0em 1em 0 0.4em;
 		grid-column-start: 1;
 		height: 80%;
+	}
+	.customTodo {
+		border: 0.4em app.$secondary-color solid;
+		border-radius: 1em;
+		margin-left: 1em;
+
+		.topBar {
+			display: flex;
+			justify-content: space-between;
+			h1 {
+				margin: 0;
+			}
+			padding: 1em;
+			border-bottom: 0.2em app.$secondary-color solid;
+		}
+	}
+	.todo {
+		display: flex;
+		justify-content: space-between;
+		padding: 1em;
 	}
 	.assignmentFeed {
 		grid-column-start: 2;
@@ -203,6 +264,9 @@
 				justify-content: space-between;
 			}
 		}
+	}
+	button {
+		padding: 0.2em;
 	}
 
 	section {

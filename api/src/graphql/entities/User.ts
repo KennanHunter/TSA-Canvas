@@ -83,6 +83,16 @@ export const User = objectType({
 				}
 			},
 		});
+		t.list.field("todos", {
+			type: "Todo",
+			resolve(parent, args, context: Context) {
+				return context.prisma.todo.findMany({
+					where: {
+						userId: context.userId,
+					},
+				});
+			},
+		});
 	},
 });
 

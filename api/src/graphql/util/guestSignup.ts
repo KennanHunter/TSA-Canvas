@@ -24,6 +24,16 @@ export const guestMutation = extendType({
 						),
 						isGuest: true,
 						avatar: "",
+						Todo: {
+							createMany: {
+								data: [
+									{
+										text: "Check out this sick Todo",
+										completed: false,
+									},
+								],
+							},
+						},
 					},
 				});
 				await context.prisma.class.update({
