@@ -7,36 +7,31 @@ export const Class = objectType({
 	definition(t) {
 		t.nonNull.string("id");
 		t.nonNull.string("name");
+		t.string("description");
 		t.string("color");
 
 		t.nonNull.list.field("members", {
 			type: "User",
 			async resolve(parent, args, context: Context) {
-				return (
-					await context.prisma.class.findUnique({
+				return await context.prisma.class
+					.findUnique({
 						where: {
 							id: parent.id,
 						},
-						include: {
-							members: true,
-						},
 					})
-				).members;
+					.members();
 			},
 		});
 		t.nonNull.list.field("teachers", {
 			type: "User",
 			async resolve(parent, args, context: Context) {
-				return (
-					await context.prisma.class.findUnique({
+				return await context.prisma.class
+					.findUnique({
 						where: {
 							id: parent.id,
 						},
-						include: {
-							teachers: true,
-						},
 					})
-				).teachers;
+					.teachers();
 			},
 		});
 		t.nonNull.field("owner", {
@@ -124,14 +119,16 @@ export const ClassMutation = extendType({
 			args: {
 				name: nonNull(stringArg()),
 				color: nonNull(stringArg()),
+				description: stringArg(),
 			},
 			resolve(parent, args, context: Context) {
-				const { name, color } = args;
+				const { name, color, description } = args;
 
 				const newClass = context.prisma.class.create({
 					data: {
 						name,
 						color,
+						description,
 						owner: { connect: { id: context.userId } },
 					},
 				});

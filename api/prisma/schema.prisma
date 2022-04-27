@@ -43,9 +43,10 @@ model UserPreferences {
 }
 
 model Class {
-  id    String @id @default(cuid())
-  name  String
-  color String // Hex color
+  id          String  @id @default(cuid())
+  name        String
+  color       String // Hex color
+  description String?
 
   owner   User   @relation(name: "Owner", fields: [ownerId], references: [id])
   ownerId String

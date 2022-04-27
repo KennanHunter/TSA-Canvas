@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
+	import { page } from "$app/stores";
+	import Card from "$lib/components/Card.svelte";
 	import { query } from "$lib/functions/query";
-	import type { ValueTypes } from "$zeus/index";
 	import type { LoadInput, LoadOutput } from "@sveltejs/kit/types/internal";
-	import { onMount } from "svelte";
 
 	export async function load({
 		params,
@@ -43,21 +43,37 @@
 						dueAt: number;
 					}[]
 				).sort((a, b) => a.dueAt - b.dueAt),
+				Class: (
+					await query({
+						Class: [
+							{
+								classId: params.id,
+							},
+							{
+								hasPerms: true,
+							},
+						],
+					})
+				).Class,
 			},
 		};
 	}
 </script>
 
 <script lang="ts">
-	import { page } from "$app/stores";
-	import Card from "$lib/components/Card.svelte";
-
 	export let assignments;
+	export let Class;
 </script>
 
 <h1>Assignments</h1>
 
 <div>
+	{#if Class.hasPerms}
+		<a href={$page.url.href + "assignment/create"}
+			><button>Create assignment</button></a
+		>
+	{/if}
+
 	{#each assignments as assignment}
 		<a href={$page.url.href + assignment.id}>
 			<Card

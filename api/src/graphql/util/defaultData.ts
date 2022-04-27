@@ -46,6 +46,9 @@ export async function populate() {
 							id: adminUser.id,
 						},
 					},
+					description: readFileSync(
+						resolve(__dirname, "defaultClassDescription.md"),
+					).toString(),
 					color: "",
 					assignments: {
 						create: {

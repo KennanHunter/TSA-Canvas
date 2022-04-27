@@ -35,6 +35,8 @@
 </script>
 
 <script lang="ts">
+	import { page } from "$app/stores";
+
 	export let members: {
 		owner: { name: string };
 		members: { name: string }[];
@@ -46,5 +48,18 @@
 <ul>
 	{#each members.members as member}
 		<li>{member.name}</li>
+	{:else}
+		<p>
+			There doesn't appear to be any members, you can add some at
+			<a href={"/class/" + $page.params.id + "/invite"}>the invite page</a
+			>
+		</p>
 	{/each}
 </ul>
+
+<style>
+	a {
+		color: aquamarine;
+		text-decoration: underline;
+	}
+</style>
